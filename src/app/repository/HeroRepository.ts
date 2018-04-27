@@ -1,4 +1,3 @@
-import HeroModel from "./../model/HeroModel";
 import IHeroModel from "./../model/interfaces/IHeroModel";
 import HeroSchema from "./../dataAccess/schemas/HeroSchema";
 import RepositoryBase from "./base/RepositoryBase";

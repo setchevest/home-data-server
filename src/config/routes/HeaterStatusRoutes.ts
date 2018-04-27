@@ -1,15 +1,15 @@
 import * as express from "express";
-import HeroController from "./../../controllers/HeroController";
+import HeaterStatusController from "../../controllers/HeaterStatusController";
 
 var router = express.Router();
-export default class HeroRoutes {
-    private _heroController: HeroController;
+export default class HeaterStatusRoutes {
+    private _controller: HeaterStatusController;
     
     constructor () {
-        this._heroController = new HeroController();   
+        this._controller = new HeaterStatusController();   
     }
     public get routes () {
-        var controller = this._heroController;
+        var controller = this._controller;
         router.get("/", controller.retrieve);
         router.post("/", controller.create);
         router.put("/:_id", controller.update);
@@ -17,8 +17,6 @@ export default class HeroRoutes {
         router.delete("/:_id", controller.delete);
         return router;
     }
-    
-    
 }
 
-Object.seal(HeroRoutes);
+Object.seal(HeaterStatusRoutes);
