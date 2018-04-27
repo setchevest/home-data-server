@@ -1,0 +1,20 @@
+version: "2"
+services:
+  server:
+    container_name: home-server
+    #restart: always
+    build: .
+    ports:
+      - "8080:8080"
+    links:
+      - db
+    environment:
+      - MONGO_URI=mongo
+      - PORT
+  db:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - /Users/sebastian.etchevest/documents/code/home-station/home-data-server/data:/data/db
+    ports:
+      - "27017:27017"
