@@ -7,8 +7,8 @@ export default class HeaterStatusModel {
    constructor(model: IHeaterStatusModel) {
        this._model = model;
    }
-   get name (): string {
-       return this._model.name;
+   get mode (): string {
+       return this._model.mode;
    }
    
    get isOn (): boolean {

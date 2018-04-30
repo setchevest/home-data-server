@@ -8,7 +8,7 @@ export class HeaterStatusSchema {
    
   static get schema () {
        var schema =  mongoose.Schema({
-           name : {
+           mode : {
                type: String,
                required: true
            },
@@ -20,7 +20,10 @@ export class HeaterStatusSchema {
                type: Number,
                required: false
            }
-       });
+       },
+       {
+           timestamps: true
+        });
        
        return schema;
    }

@@ -8,13 +8,16 @@ export default class HeaterStatusRoutes {
     constructor () {
         this._controller = new HeaterStatusController();   
     }
+
     public get routes () {
         var controller = this._controller;
         router.get("/", controller.retrieve);
         router.post("/", controller.create);
         router.put("/:_id", controller.update);
-        router.get("/:_id", controller.findById);
+        router.get("/byid/:_id", controller.findById);
         router.delete("/:_id", controller.delete);
+        router.post("/setHeaterMode", controller.setHeaterMode);
+        router.get("/getCurrentStatus", controller.getCurrentStatus);
         return router;
     }
 }

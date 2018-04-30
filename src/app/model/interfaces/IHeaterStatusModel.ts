@@ -1,7 +1,6 @@
 import * as mongoose from "mongoose";
-
 export default interface IHeaterModel extends mongoose.Document {
-  name: string;
+  mode: string;
   isOn: boolean;
   temperature: number;
 }
