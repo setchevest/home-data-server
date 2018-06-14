@@ -38,7 +38,7 @@ export default class HeaterStatusController implements IBaseController<IHeaterSt
 
     public getCurrentStatus(req: Request, res: Response): void {
         DefaultControllerOperations.processRequest(req,res, ()=>{
-            res.send({data: {mode:"automatic", isOn: false, temperature: 19}});
+            res.send({data: <IHeaterStatusModel>{mode:"automatic", isOn: false, temperature: 12}});
         });
     }
 }

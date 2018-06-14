@@ -1,13 +1,14 @@
 import DataAccess from "./../../dataAccess/DataAccess";
 import IHeaterStatusModel from "./../../model/interfaces/IHeaterStatusModel";
+import { Schema } from "mongoose";
 
 var mongoose = DataAccess.mongooseInstance;
 var mongooseConnection = DataAccess.mongooseConnection;
 
 export class HeaterStatusSchema {
    
-  static get schema () {
-       var schema =  mongoose.Schema({
+  static get schema () : Schema {
+       var schema = new Schema({
            mode : {
                type: String,
                required: true
@@ -19,11 +20,7 @@ export class HeaterStatusSchema {
            temperature: {
                type: Number,
                required: false
-           }
-       },
-       {
-           timestamps: true
-        });
+           }});
        
        return schema;
    }

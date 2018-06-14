@@ -1,6 +1,7 @@
 import * as express from "express";
-import HeroRoutes from "./../HeroRoutes";
+// import HeroRoutes from "./../HeroRoutes";
 import HeaterStatusRoutes from "../HeaterStatusRoutes";
+import ThermostatConfigRoutes from "../ThermostatRoutes";
 
 var app = express();
 export default class BaseRoutes {
@@ -10,8 +11,9 @@ export default class BaseRoutes {
             res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             next();
           });          
-        app.use("/api/heroes", new HeroRoutes().routes);
+        // app.use("/api/heroes", new HeroRoutes().routes);
         app.use("/api/heaterstatus", new HeaterStatusRoutes().routes);
+        app.use("/api/thermostat", new ThermostatConfigRoutes().routes);
         return app;
     }
 }

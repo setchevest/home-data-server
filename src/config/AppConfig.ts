@@ -15,7 +15,7 @@ export default class AppConfig {
 
     constructor() {
       this.setEnv();
-      this.MONGO_URI = process.env.MONGO_URI || "127.0.0.1";
+      this.MONGO_URI = process.env.MONGO_URI || "1mongodb://127.0.0.1:27017/chat";
       this.PORT = process.env.PORT ? Number.parseInt(process.env.PORT) : 8080;
       this.LogLevel = "dev";
     }
