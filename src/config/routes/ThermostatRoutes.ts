@@ -11,6 +11,7 @@ export default class ThermostatRoutes {
 
     public get routes () {
         var controller = this._controller;
+        router.get("/", controller.currentStatus);
         router.get("/config", controller.getConfiguration);
         router.post("/turnOn", controller.turnOn);
         router.post("/turnOff", controller.turnOff);

@@ -10,28 +10,35 @@ export default class ThermostatController {
         res.send(new ThermostatBusiness(new HeaterStatusBusiness()).getConfiguration());
     }
 
-    public turnOn(req: Request, res: Response): void {
-        new ThermostatBusiness(new HeaterStatusBusiness()).turnOn((error, result)=>{
-            res.send(result);
+    public currentStatus(req: Request, res: Response): void {
+        new ThermostatBusiness(new HeaterStatusBusiness()).setPower(true, (error, result) => {
+            res.send(error ? error : result);
         });
-        
+
+    }
+
+    public turnOn(req: Request, res: Response): void {
+        new ThermostatBusiness(new HeaterStatusBusiness()).setPower(true, (error, result) => {
+            res.send(error ? error : result);
+        });
+
     }
 
     public turnOff(req: Request, res: Response): void {
-        new ThermostatBusiness(new HeaterStatusBusiness()).turnOff((error, result)=>{
-            res.send(result);
+        new ThermostatBusiness(new HeaterStatusBusiness()).setPower(false, (error, result) => {
+            res.send(error ? error : result);
         });
     }
 
     public setAutoMode(req: Request, res: Response): void {
-        new ThermostatBusiness(new HeaterStatusBusiness()).setMode(ThermostatMode.Automatic, (error, result)=>{
-            res.send(result);
+        new ThermostatBusiness(new HeaterStatusBusiness()).setMode(ThermostatMode.Automatic, (error, result) => {
+            res.send(error ? error : result);
         });
     }
 
     public setManualMode(req: Request, res: Response): void {
-        new ThermostatBusiness(new HeaterStatusBusiness()).setMode(ThermostatMode.Manual, (error, result)=>{
-            res.send(result);
+        new ThermostatBusiness(new HeaterStatusBusiness()).setMode(ThermostatMode.Manual, (error, result) => {
+            res.send(error ? error : result);
         });
     }
 }

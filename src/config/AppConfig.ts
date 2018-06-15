@@ -11,12 +11,14 @@ export default class AppConfig {
 
     public readonly MONGO_URI: string;
     public readonly PORT: number;
+    public readonly THERMOSTAT_URL: string;
     public readonly LogLevel: string;
 
     constructor() {
       this.setEnv();
-      this.MONGO_URI = process.env.MONGO_URI || "1mongodb://127.0.0.1:27017/chat";
+      this.MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/home";
       this.PORT = process.env.PORT ? Number.parseInt(process.env.PORT) : 8080;
+      this.THERMOSTAT_URL = process.env.THERMOSTAT_URL || "http://192.168.0.16:9000";
       this.LogLevel = "dev";
     }
     

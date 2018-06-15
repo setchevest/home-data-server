@@ -20,7 +20,10 @@ export class HeaterStatusSchema {
            temperature: {
                type: Number,
                required: false
-           }});
+           }},
+           { 
+               timestamps: true
+            });
        
        return schema;
    }
