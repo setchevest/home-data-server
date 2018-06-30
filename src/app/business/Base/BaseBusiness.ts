@@ -1,9 +1,10 @@
 import IBaseBusiness from "../interfaces/base/IBaseBusiness";
 import RepositoryBase from "../../repository/base/RepositoryBase";
-import * as mongoose from "mongoose"
+import BaseModel from "../../model/BaseModel";
+import IModel from "../../model/interfaces/IModel";
 
 
-export default abstract class BaseBusiness<T extends mongoose.Document> implements IBaseBusiness<T> {
+export default abstract class BaseBusiness<T extends IModel> implements IBaseBusiness<T> {
     
     protected _repository: RepositoryBase<T>;
     
@@ -33,7 +34,7 @@ export default abstract class BaseBusiness<T extends mongoose.Document> implemen
         this._repository.delete(_id , callback);
     }
     
-    public findById(_id: string, callback: (error: any, result: T) => void) {
+    public findById(_id: string, callback: (error: any, result: any) => void) {
         this._repository.findById(_id, callback);
     }
     

@@ -1,69 +1,97 @@
 import * as express from "express";
-import IBaseController from "../interfaces/base/IBaseController";
 import IBaseBusiness from "../../app/business/interfaces/base/IBaseBusiness";
+import IReadController from "../interfaces/IReadController";
+import IWriteController from "../interfaces/IWriteController";
+import autobind from "autobind-decorator";
 
-export default class BaseController {
+@autobind
+export default class BaseController<T> implements IReadController, IWriteController {
 
-    public static create<T>(business: IBaseBusiness<T>, req: express.Request, res: express.Response): void {
-        BaseController.processRequest(req,res,()=>{
+    private _business: IBaseBusiness<T>;
+    protected get business(): IBaseBusiness<T> {
+        return this._business;
+    }
+
+    /**
+     *
+     */
+    constructor(business: IBaseBusiness<T>) {
+        
+        this._business = business;        
+    }
+
+    public create(req: express.Request, res: express.Response): void {
+
+        var self = this;
+        this.processRequest(req,res,()=>{
             var entity: T = <T>req.body;
-            business.create(entity, (error, result) => {
-                if (error) res.send(BaseController.createErrorResponse(error));
-                else res.send({ status: "success", data: result });
+            self.business.create(entity, (error, result) => {
+                if (error) res.send(self.createErrorResponse(error));
+                else res.send(self.createSuccessResponse(result));
             });
         });
     }
 
-    public static update<T>(business: IBaseBusiness<T>,req: express.Request, res: express.Response): void {
-        BaseController.processRequest(req,res,()=>{
+    public update(req: express.Request, res: express.Response): void {
+        var self = this;
+        this.processRequest(req,res,()=>{
             var entity: T = <T>req.body;
             var _id: string = req.params._id;
-            business.update(_id, entity, (error, result) => {
-                if (error) res.send(BaseController.createErrorResponse(error));
-                else res.send({ status: "success", data: result });
-            });
-        });
-    }
-    public static delete<T>(business: IBaseBusiness<T>,req: express.Request, res: express.Response): void {
-        BaseController.processRequest(req,res,()=>{
-            var _id: string = req.params._id;
-            business.delete(_id, (error, result) => {
-                if (error) res.send(BaseController.createErrorResponse(error));
-                else res.send({ status: "success", data: result });
-            });
-        });
-    }
-    public static retrieve<T>(business: IBaseBusiness<T>,req: express.Request, res: express.Response): void {
-        BaseController.processRequest(req,res,()=>{
-            business.retrieve((error, result) => {
-                if (error) res.send(BaseController.createErrorResponse(error));
-                else res.send(result);
-            });
-        });
-    }
-    public static findById<T>(business: IBaseBusiness<T>,req: express.Request, res: express.Response): void {
-
-        BaseController.processRequest(req,res,()=>{
-            var _id: string = req.params._id;
-            business.findById(_id, (error, result) => {
-                if (error) res.send(BaseController.createErrorResponse(error));
-                else res.send(result);
+            self.business.update(_id, entity, (error, result) => {
+                if (error) res.send(self.createErrorResponse(error));
+                else res.send(self.createSuccessResponse(result));
             });
         });
     }
 
-    public static processRequest(req: express.Request, res: express.Response, fn:()=>void): void{
+    public delete(req: express.Request, res: express.Response): void {
+        var self = this;
+        this.processRequest(req,res,()=>{
+            var _id: string = req.params._id;
+            self.business.delete(_id, (error, result) => {
+                if (error) res.send(self.createErrorResponse(error));
+                else res.send(self.createSuccessResponse(result));
+            });
+        });
+    }
+
+    public retrieve(req: express.Request, res: express.Response): void {
+        var self = this;
+        this.processRequest(req,res,()=>{
+            self.business.retrieve((error, result) => {
+                if (error) res.send(self.createErrorResponse(error));
+                else res.send(self.createSuccessResponse(result));
+            });
+        });
+    }
+    
+    public findById(req: express.Request, res: express.Response): void {
+        var self = this;
+        this.processRequest(req,res,()=>{
+            var _id: string = req.params._id;
+            self.business.findById(_id, (error, result) => {
+                if (error) res.send(self.createErrorResponse(error));
+                else res.send(self.createSuccessResponse(result));
+            });
+        });
+    }
+
+    protected processRequest(req: express.Request, res: express.Response, fn:()=>void): void{
         try {
             fn();
         }
         catch (e) {
             console.log(e);
-            res.send(BaseController.createErrorResponse(e));
+            res.send(this.createErrorResponse(e));
         }
     }
 
-    public static createErrorResponse(error: any): any {
+    protected createErrorResponse(error: any): any {
         return { status: "error", error: "An error has occured", errorMessage: error.message };
+    }
+
+    protected createSuccessResponse(data: any): any {
+        return { status: "success", data: data };
     }
 
 }

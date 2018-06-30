@@ -1,11 +1,17 @@
-import * as mongoose from "mongoose";
+import IModel from "./interfaces/IModel";
+import { sealed } from "../../core/Decorators";
 
-export default class BaseModel<T extends mongoose.Document> {
+@sealed
+export default class BaseModel<T extends IModel> {
    
    protected _model: T;
    
    constructor(model: T) {
        this._model = model;
    } 
+
+   get _id(): any {
+       return this._model._id;
+   }
+
 }
-Object.seal(BaseModel);

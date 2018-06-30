@@ -1,4 +1,4 @@
-import AppConfig from "./config/appConfig"
+import AppConfig from "./config/AppConfig"
 import * as http from 'http';
 import Express from './config/WebServer';
 

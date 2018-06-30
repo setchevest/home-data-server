@@ -1,27 +1,31 @@
 import IRead from "./../interfaces/base/IRead";
 import IWrite from "./../interfaces/base/IWrite";
-import IHeroModel from "./../../model/interfaces/IHeroModel";
 
 import * as mongoose from "mongoose";
 
 export default class RepositoryBase<T extends mongoose.Document> implements IRead<T>, IWrite<T> {
 
-    private _model: mongoose.Model<mongoose.Document>;
+    private _model: mongoose.Model<T>;
 
-    constructor(schemaModel: mongoose.Model<mongoose.Document>) {
+    protected get model() : mongoose.Model<T>
+    {
+        return this._model;
+    }
+
+    constructor(schemaModel: mongoose.Model<T>) {
         this._model = schemaModel;
     }
 
-    public create(item: T, callback: (error: any, result: mongoose.Document[]) => void) {
+    public create(item: T, callback: (error: any, result: T[]) => void) {
         this._model.create(item, callback);
 
     }
 
-    public retrieve(callback: (error: any, result: mongoose.Document[]) => void) {
+    public retrieve(callback: (error: any, result: T[]) => void) {
         this._model.find({}, callback)
     }
 
-    public update(_id: mongoose.Types.ObjectId, item: T, callback: (error: any, result: any) => void) {
+    public update(_id: string, item: T, callback: (error: any, result: any) => void) {
         this._model.update({ _id: _id }, item, callback);
     }
 
@@ -33,7 +37,11 @@ export default class RepositoryBase<T extends mongoose.Document> implements IRea
         this._model.findById(_id, callback);
     }
 
-    private toObjectId(_id: string): mongoose.Types.ObjectId {
+    public findOneWhere(condition: any, callback: (error: any, result: T) => void) {
+        this._model.findOne(condition, callback);
+    }
+
+    protected toObjectId(_id: string): mongoose.Types.ObjectId {
         return mongoose.Types.ObjectId.createFromHexString(_id)
     }
 

@@ -8,12 +8,15 @@ services:
       - "8080:8080"
     links:
       - db
+    depends_on:
+      - db
     environment:
-      - MONGO_URI=mongo
-      - PORT
+      - MONGO_URI=mongodb://mongo:27017/home
+      - PORT=8080
+      - THERMOSTAT_URL=http://192.168.0.4
   db:
     container_name: mongo
-    image: mongo
+    image: mongo:latest
     volumes:
       - /Users/sebastian.etchevest/documents/code/home-station/home-data-server/data:/data/db
     ports:

@@ -1,11 +1,11 @@
-import IHeaterStatusModel from "../model/interfaces/IHeaterStatusModel";
-import IHeaterStatusBusiness from "./interfaces/IHeaterStatusBusiness";
+import IThermostatModel, { ThermostatMode } from "../model/interfaces/IThermostatModel";
 import IThermostatBusiness from "./interfaces/IThermostatBusiness";
 import { IThermostatConfig } from "app/model/interfaces/IThermostatConfig";
-import { ThermostatMode } from "../../app/model/ThermostatConfigModel";
 import AppConfig from "./../../config/AppConfig";
 import axios from "axios";
-import * as logger from "morgan";
+import BaseBusiness from "./Base/BaseBusiness";
+import ThermostatRepository from "../repository/ThermostatRepository";
+import ThermostatModel from "../model/ThermostatModel";
 
 // axios.interceptors.request.use(request => {
 //     console.log('Starting Request', request)
@@ -17,16 +17,13 @@ import * as logger from "morgan";
 //     return request
 //   });
 
-export default class ThermostatBusiness implements IThermostatBusiness {
+import { sealed } from "../../core/Decorators";
+@sealed
+export default class ThermostatBusiness extends BaseBusiness<IThermostatModel> implements IThermostatBusiness {
 
-    private heaterStatusBusiness: IHeaterStatusBusiness;
-    /**
-     *
-     */
-    constructor(heaterStatusBusiness: IHeaterStatusBusiness) {
-        this.heaterStatusBusiness = heaterStatusBusiness;
-
-    }
+    constructor () {
+        super(new ThermostatRepository());
+    } 
 
     private defaultConfig: IThermostatConfig = <IThermostatConfig>{
         updateFrequency: 6000,
@@ -43,17 +40,33 @@ export default class ThermostatBusiness implements IThermostatBusiness {
     public getConfiguration(): IThermostatConfig {
         return this.defaultConfig;
     }
+
+    public getStatus(callback: (error: any, result: any) => void): void {
+        axios.get(AppConfig.Instance.THERMOSTAT_URL).then(response => {
+            var data = {
+                isOn: response.data.heater.status == "ON",
+                // temperature: response.data.zones[0].temp,
+                // humidity: response.data.zones[0].hum,
+                mode: response.data.mode == "Manual"? ThermostatMode.Manual.toString() : ThermostatMode.Automatic.toString()
+            };
+            callback(null, <ThermostatModel>data);
+        }).catch(error => {
+            callback(error, false);
+        });
+    }
+
     // {"fm":224,"lu":55,"mode":"Manual","heater":{"status":"OFF"},"zones":[{"id":2,"temp":27,"hum":41}]}
     public setPower(power: boolean, callback: (error: any, result: any) => void): void {
         var url = AppConfig.Instance.THERMOSTAT_URL + (power ? "/on" : "/off");
         axios.get(url).then(response => {
             var data = {
                 isOn: response.data.heater.status == "ON",
-                temperature: response.data.zones[0].temp,
-                humidity: response.data.zones[0].hum,
+                // temperature: response.data.zones[0].temp,
+                // humidity: response.data.zones[0].hum,
                 mode: ThermostatMode.Manual.toString()
             };
-            this.heaterStatusBusiness.create(<IHeaterStatusModel>data, (saveError, saveResult) => {
+            
+            this.create(<IThermostatModel>data, (saveError, saveResult) => {
                 callback(null, saveResult);
             });
         }).catch(error => {
@@ -67,11 +80,11 @@ export default class ThermostatBusiness implements IThermostatBusiness {
 
             var data = {
                 isOn: response.data.heater.status == "ON",
-                temperature: response.data.zones[0].temp,
-                humidity: response.data.zones[0].hum,
+                // temperature: response.data.zones[0].temp,
+                // humidity: response.data.zones[0].hum,
                 mode: mode.toString()
             };
-            this.heaterStatusBusiness.create(<IHeaterStatusModel>data, (saveError, saveResult) => {
+            this.create(<IThermostatModel>data, (saveError, saveResult) => {
                 callback(null, saveResult);
             });
 
@@ -80,7 +93,3 @@ export default class ThermostatBusiness implements IThermostatBusiness {
         });
     }
 }
-
-
-
-Object.seal(ThermostatBusiness);

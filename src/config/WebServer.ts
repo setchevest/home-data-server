@@ -1,4 +1,4 @@
-import AppConfig from "./appConfig"
+import AppConfig from "./AppConfig"
 import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
 import * as express from "express";
@@ -76,7 +76,7 @@ class WebServer {
      */
     private setRoutes() {
         // Create Routes, and export its configured Express.Router
-        this.app.use(new BaseRoutes().routes);
+        this.app.use(BaseRoutes.routes);
     }
 }
 

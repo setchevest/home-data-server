@@ -2,27 +2,40 @@ import * as Mongoose from "mongoose";
 import AppConfig from "./../../config/AppConfig";
 
 export class DataAccess {
-    static mongooseInstance: any;
-    static mongooseConnection: Mongoose.Connection;
+    private static _mongooseInstance: any;
+    private static _mongooseConnection: Mongoose.Connection;
+
+    public static get mongooseInstance() {
+        return this.connect();
+    }
+
+    public static get mongooseConnection() {
+        if(!this._mongooseConnection)
+            this.connect();
+        
+        return this._mongooseConnection;
+    }
 
     constructor() {
     }
 
     static connect(): Mongoose.Connection {
-        if (this.mongooseInstance) return this.mongooseInstance;
+        if (this._mongooseInstance) return this._mongooseInstance;
 
-        this.mongooseConnection = Mongoose.connection;
-        this.mongooseConnection.once("open", () => {
+        this._mongooseConnection = Mongoose.connection;
+        this._mongooseConnection.once("open", () => {
             console.log("CONNECTED TO MONGO AT: %s",AppConfig.Instance.MONGO_URI);
         });
-        console.log(AppConfig.Instance.MONGO_URI)
-        this.mongooseInstance = Mongoose.connect(AppConfig.Instance.MONGO_URI).catch(error=>{
+        console.log("CONNECTING TO MONGO AT: %s",AppConfig.Instance.MONGO_URI);
+        var self = this;
+        self._mongooseInstance = Mongoose.connect(AppConfig.Instance.MONGO_URI).catch(error=>{
             console.log("CONNECTION ERROR");
             console.log(error);
+            self._mongooseInstance = null;
         });
-        return this.mongooseInstance;
+        
+        return this._mongooseInstance;
     }
 
 }
-DataAccess.connect();
 export default DataAccess;
