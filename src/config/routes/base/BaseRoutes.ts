@@ -2,7 +2,7 @@ import * as express from "express";
 // import HeroRoutes from "./../HeroRoutes";
 import ThermostatRoutes from "../ThermostatRoutes";
 import TemperatatureSensorDataRoutes from "../TemperatatureSensorDataRoutes";
-import ZonesRoutes from "../Zoneroutes";
+import ZonesRoutes from "../ZoneRoutes";
 
 var app = express();
 export default class BaseRoutes {

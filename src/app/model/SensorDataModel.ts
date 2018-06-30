@@ -9,12 +9,4 @@ export default abstract class SensorDataModel<T extends ISensorDataModel> extend
     get zoneId(): any {
         return this._model.zone;
     }
-
-    get type(): string {
-        return this._model.type;
-    }
-
-    set type(newType: string) {
-        this._model.type = newType;
-    }
 }

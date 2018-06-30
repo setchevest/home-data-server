@@ -5,7 +5,9 @@ import AppConfig from "./../../config/AppConfig";
 import axios from "axios";
 import BaseBusiness from "./Base/BaseBusiness";
 import ThermostatRepository from "../repository/ThermostatRepository";
-import ThermostatModel from "../model/ThermostatModel";
+import TemperatureSensorDataBusiness from "./TemperatureSensorDataBusiness";
+import ITemperatureSensorDataModel from "../model/interfaces/ITemperatureSensorDataModel";
+
 
 // axios.interceptors.request.use(request => {
 //     console.log('Starting Request', request)
@@ -18,12 +20,14 @@ import ThermostatModel from "../model/ThermostatModel";
 //   });
 
 import { sealed } from "../../core/Decorators";
+import ZoneBusiness from "./ZoneBusiness";
+
 @sealed
 export default class ThermostatBusiness extends BaseBusiness<IThermostatModel> implements IThermostatBusiness {
 
-    constructor () {
+    constructor() {
         super(new ThermostatRepository());
-    } 
+    }
 
     private defaultConfig: IThermostatConfig = <IThermostatConfig>{
         updateFrequency: 6000,
@@ -31,8 +35,8 @@ export default class ThermostatBusiness extends BaseBusiness<IThermostatModel> i
         zones: [
             { zoneId: 1, name: "Cocina" }],
         threshold: {
-            min: 20,
-            max: 23,
+            min: 19,
+            max: 21,
             controlZoneId: 1
         }
     };
@@ -43,40 +47,46 @@ export default class ThermostatBusiness extends BaseBusiness<IThermostatModel> i
 
     public getStatus(callback: (error: any, result: any) => void): void {
         axios.get(AppConfig.Instance.THERMOSTAT_URL).then(response => {
+            this.saveCurrentData(response);
             var data = {
                 isOn: response.data.heater.status == "ON",
-                // temperature: response.data.zones[0].temp,
-                // humidity: response.data.zones[0].hum,
-                mode: response.data.mode == "Manual"? ThermostatMode.Manual.toString() : ThermostatMode.Automatic.toString()
+                temperature: response.data.zones[0].temp,
+                humidity: response.data.zones[0].hum,
+                mode: response.data.mode == "Manual" ? ThermostatMode.Manual.toString() : ThermostatMode.Automatic.toString()
             };
-            callback(null, <ThermostatModel>data);
+            
+            callback(null, data);
         }).catch(error => {
-            callback(error, false);
+            callback(error, null);
         });
     }
+
 
     // {"fm":224,"lu":55,"mode":"Manual","heater":{"status":"OFF"},"zones":[{"id":2,"temp":27,"hum":41}]}
     public setPower(power: boolean, callback: (error: any, result: any) => void): void {
         var url = AppConfig.Instance.THERMOSTAT_URL + (power ? "/on" : "/off");
         axios.get(url).then(response => {
+
+            this.saveCurrentData(response);
             var data = {
                 isOn: response.data.heater.status == "ON",
-                // temperature: response.data.zones[0].temp,
-                // humidity: response.data.zones[0].hum,
                 mode: ThermostatMode.Manual.toString()
             };
-            
             this.create(<IThermostatModel>data, (saveError, saveResult) => {
+                saveResult.temperature = response.data.zones[0].temp;
+                saveResult.humidity = response.data.zones[0].hum;
                 callback(null, saveResult);
             });
         }).catch(error => {
-            callback(error, false);
+            callback(error, null);
         });
     }
 
     public setMode(mode: ThermostatMode, callback: (error: any, result: any) => void): void {
         var url = mode == ThermostatMode.Manual ? "/manual" : "/auto";
         axios.get(AppConfig.Instance.THERMOSTAT_URL + url).then(response => {
+
+            this.saveCurrentData(response);
 
             var data = {
                 isOn: response.data.heater.status == "ON",
@@ -89,7 +99,27 @@ export default class ThermostatBusiness extends BaseBusiness<IThermostatModel> i
             });
 
         }).catch(error => {
-            callback(error, false);
+            callback(error, null);
         });
+    }
+
+
+    private saveCurrentData(response: any) {
+        if(response.data.zones){
+            var sensorBussiness: TemperatureSensorDataBusiness = new TemperatureSensorDataBusiness();
+            var zoneBusiness: ZoneBusiness = new ZoneBusiness();
+            response.data.zones.forEach(aZone => {
+                zoneBusiness.findByInternalId(<number>aZone.id, function (error, zone) {
+                    if (zone) {
+                        sensorBussiness.create(<ITemperatureSensorDataModel>{
+                            zone: zone._id,
+                            temperature: <number>aZone.temp,
+                            humidity: <number>aZone.hum
+                        }, function () { });
+                    }
+                }); 
+            });
+        }
+        
     }
 }

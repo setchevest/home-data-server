@@ -8,8 +8,4 @@ export default class TemperatureSensorDataBusiness extends BaseBusiness<ITempera
     constructor() {
         super(new TemperatureSensorDataRepository());
     }
-
-    public create(item: ITemperatureSensorDataModel, callback: (error: any, result: any) => void) {
-        this._repository.create(item, callback);
-    }
 }
