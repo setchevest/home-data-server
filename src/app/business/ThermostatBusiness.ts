@@ -54,7 +54,6 @@ export default class ThermostatBusiness extends BaseBusiness<IThermostatModel> i
                 humidity: response.data.zones[0].hum,
                 mode: response.data.mode == "Manual" ? ThermostatMode.Manual.toString() : ThermostatMode.Automatic.toString()
             };
-            
             callback(null, data);
         }).catch(error => {
             callback(error, null);
@@ -70,12 +69,19 @@ export default class ThermostatBusiness extends BaseBusiness<IThermostatModel> i
             this.saveCurrentData(response);
             var data = {
                 isOn: response.data.heater.status == "ON",
-                mode: ThermostatMode.Manual.toString()
+                mode: ThermostatMode.Manual.toString(),
+                
             };
             this.create(<IThermostatModel>data, (saveError, saveResult) => {
-                saveResult.temperature = response.data.zones[0].temp;
-                saveResult.humidity = response.data.zones[0].hum;
-                callback(null, saveResult);
+
+                var resp={
+                    isOn: saveResult.isOn,
+                    mode: saveResult.mode,
+                    temperature: response.data.zones[0].temp,
+                    humidity: response.data.zones[0].hum,
+                };
+                
+                callback(null, resp);
             });
         }).catch(error => {
             callback(error, null);
@@ -90,12 +96,17 @@ export default class ThermostatBusiness extends BaseBusiness<IThermostatModel> i
 
             var data = {
                 isOn: response.data.heater.status == "ON",
-                // temperature: response.data.zones[0].temp,
-                // humidity: response.data.zones[0].hum,
                 mode: mode.toString()
             };
             this.create(<IThermostatModel>data, (saveError, saveResult) => {
-                callback(null, saveResult);
+
+                var resp = {
+                    isOn: saveResult.isOn,
+                    mode: saveResult.mode,
+                    temperature: response.data.zones[0].temp,
+                    humidity: response.data.zones[0].hum,
+                };
+                callback(null, resp);
             });
 
         }).catch(error => {
