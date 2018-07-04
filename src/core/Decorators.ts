@@ -6,8 +6,6 @@ export function apiController<T extends {new(...args:any[]):{}}>(constructor:T) 
     // Object.keys(constructor.prototype).forEach(element => {
     //     console.log("Api action: %s", element);
     // });
-    
-    
 }
 
 export function apiAction(target: Object, key: string | symbol, descriptor: TypedPropertyDescriptor<Function>) {

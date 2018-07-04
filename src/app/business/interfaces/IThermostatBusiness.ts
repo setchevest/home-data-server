@@ -5,7 +5,7 @@ import IThermostatModel, { ThermostatMode } from "../../model/interfaces/IThermo
 
 
 export default interface IThermostatBusiness extends IBaseBusiness<IThermostatModel> {
-    getConfiguration(): config.IThermostatConfig;
+    getConfiguration(callback: (error: any, result: any) => void): void
     getStatus(callback: (error: any, result: ThermostatModel ) => void): void;
     setPower(power: boolean, callback: (error: any, result: boolean ) => void): void;
     setMode(mode: ThermostatMode, callback: (error: any, result: any) => void): void;

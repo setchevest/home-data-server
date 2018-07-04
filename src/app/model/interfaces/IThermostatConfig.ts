@@ -30,3 +30,22 @@ export interface IThermostatConfig  {
   threshold: IThermostatTemperatureConfig; 
 }
 
+export interface IThermostatHeater  {
+  status: string;
+}
+
+export interface IThermostatZone  {
+  id:number;
+  temp:number;
+  hum?:number;
+}
+
+// {"fm":224,"lu":55,"mode":"Manual","heater":{"status":"OFF"},"zones":[{"id":2,"temp":27,"hum":41}]}
+export interface IThermostatResponse  {
+  fm: number;
+  lu: number;
+  mode: string;
+  heater: IThermostatHeater;
+  zones: IThermostatZone[]; 
+}
+

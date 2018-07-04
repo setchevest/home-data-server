@@ -1,6 +1,5 @@
 export default  interface Write<T> {
-    create: (item:T, callback: (error: any, result: any ) => void) => void;
-    update:(_id: string, item:T, callback: (error: any, result: any)=> void) => void ;
-    delete: (_id: string, callback: (error: any, result: any) => void) => void;
-    
+    create: (item:T, callback: (error: any, result: any ) => void) => Promise<T>;
+    update:(_id: string, item:T, callback: (error: any, result: any)=> void) => Promise<T> ;
+    delete: (_id: string, callback: (error: any, result: any) => void) => Promise<void>;
 }

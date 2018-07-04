@@ -1,10 +1,8 @@
-import IRead from "./../interfaces/base/IRead";
-import IWrite from "./../interfaces/base/IWrite";
-
 import * as mongoose from "mongoose";
+import IRepository from "../interfaces/IRepository";
 
-export default class RepositoryBase<T extends mongoose.Document> implements IRead<T>, IWrite<T> {
-
+export default class RepositoryBase<T extends mongoose.Document> implements IRepository<T> {
+    
     private _model: mongoose.Model<T>;
 
     protected get model() : mongoose.Model<T>
@@ -16,33 +14,32 @@ export default class RepositoryBase<T extends mongoose.Document> implements IRea
         this._model = schemaModel;
     }
 
-    public create(item: T, callback: (error: any, result: T[]) => void) {
-        this._model.create(item, callback);
-
+    public create(item: T, callback?: (error: any, result: T) => void) : Promise<T> {
+        return this._model.create(item, callback);
     }
 
-    public retrieve(callback: (error: any, result: T[]) => void) {
-        this._model.find({}, callback)
+    public retrieve(callback?: (error: any, result: T[]) => void) : Promise<T[]> {
+        return this._model.find(callback).exec();
     }
 
-    public update(_id: string, item: T, callback: (error: any, result: any) => void) {
-        this._model.update({ _id: _id }, item, callback);
+    public update(id: string, item: T, callback?: (error: any, result: T) => void) : Promise<T> {
+        return this._model.update({ _id: id }, item, callback).exec();
     }
 
-    public delete(_id: string, callback: (error: any, result: any) => void) {
-        this._model.remove({ _id: this.toObjectId(_id) }, (err) => callback(err, null));
+    public delete(_id: string, callback?: (error: any, result: T) => void) : Promise<void> {
+        return this._model.remove({ _id: this.toObjectId(_id) }, (err) => callback(err, null)).exec();
     }
 
-    public findById(_id: string, callback: (error: any, result: T) => void) {
-        this._model.findById(_id, callback);
+    public findById(id: string, callback?: (error: any, result: T) => void) : Promise<T> {
+        return this._model.findById(id, callback).exec();
     }
 
-    public findOneWhere(condition: any, callback: (error: any, result: T) => void) {
-        this._model.findOne(condition, callback);
+    public findOne(condition: any, callback?: (error: any, result: T) => void) : Promise<T> {
+        return this._model.findOne(condition, callback).exec();
     }
 
-    protected toObjectId(_id: string): mongoose.Types.ObjectId {
-        return mongoose.Types.ObjectId.createFromHexString(_id)
+    protected toObjectId(id: string): mongoose.Types.ObjectId {
+        return mongoose.Types.ObjectId.createFromHexString(id);
     }
 
 }

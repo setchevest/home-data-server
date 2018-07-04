@@ -21,7 +21,7 @@ export default class ThermostatRoutes {
         
         router.get("/status", controller.currentStatus);
         router.get("/config", controller.getConfiguration);
-        router.post("/event", controller.event);
+        router.post("/event", controller.postEvent);
         router.post("/turnOn", controller.turnOn);
         router.post("/turnOff", controller.turnOff);
         router.post("/setAutoMode", controller.setAutoMode);

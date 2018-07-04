@@ -10,12 +10,12 @@ export default class ZoneBusiness extends BaseBusiness<IZoneModel> {
     }
 
     public findByInternalId(internalId: number, callback: (error: any, result: IZoneModel) => void) {
-        this._repository.findOneWhere({ internalId: internalId }, callback);
+        this.repository.findOne({ internalId: internalId }, callback);
     }
 
-    public create(item: IZoneModel, callback: (error: any, result: any) => void) {
-        var repo = this._repository;
-        this._repository.findOneWhere({ internalId: item.internalId },function (err, zone) {
+    public create(item: IZoneModel, callback?: (error: any, result: any) => void) : Promise<IZoneModel> {
+        var repo = this.repository;
+        return this.repository.findOne({ internalId: item.internalId },function (err, zone) {
             if (!zone) {
                 repo.create(item, callback);
             }
@@ -23,15 +23,6 @@ export default class ZoneBusiness extends BaseBusiness<IZoneModel> {
                 callback(null, zone);
             }
         });
-
-        // this._repository.model.findOne().byInternalId(item.internalId).exec( function (err, zone) {
-        //     if (!zone) {
-        //         repo.create(item, callback);
-        //     }
-        //     else {
-        //         callback(null, zone);
-        //     }
-        // });
     }
 
 }
