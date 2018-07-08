@@ -11,7 +11,6 @@ import * as winston from 'winston'
 import * as expressWinston from 'express-winston'
 import { InversifyExpressServer, TYPE } from 'inversify-express-utils';
 import container from "./config/inversify.config";
-import "./controllers/HomeController";
 import "./controllers/TemperatureSensorDataController";
 import "./controllers/ZoneController";
 import "./controllers/ThermostatController";

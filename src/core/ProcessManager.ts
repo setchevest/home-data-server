@@ -1,8 +1,4 @@
-import * as cluster from "cluster"
-import * as os from "os";
-import WebServer from "../WebServer";
 import IProcess from "./IProcess";
-import TaskRunner from "../TaskRunner";
 import logger from "./Logger";
 
 
@@ -21,7 +17,11 @@ export default class ProcessManager {
 
     public runAll() : ProcessManager {
         this.processes.forEach(process => {
-            this.run(process);
+            try {
+                this.run(process);    
+            } catch (error) {
+                logger.error("Error starting process: ",process,  error)
+            }
         });
 
         return this;
