@@ -3,6 +3,7 @@ import * as dotenv from "dotenv";
 export default class AppConfig {
 
     private static _instance: AppConfig;
+    
 
     public static get Instance() {
         return this._instance || (this._instance = new AppConfig());
@@ -12,15 +13,16 @@ export default class AppConfig {
     public readonly MONGO_URI: string;
     public readonly PORT: number;
     public readonly THERMOSTAT_URL: string;
-    public readonly LogLevel: string;
+    public readonly LOG_LEVEL: string;
+    public readonly UPDATE_INTERVAL: number;
 
     constructor() {
-        console.log("Instanciating App Config");
         this.setEnv();
         this.MONGO_URI = process.env.MONGO_URI;
         this.PORT = process.env.PORT ? Number.parseInt(process.env.PORT) : 8080;
         this.THERMOSTAT_URL = process.env.THERMOSTAT_URL;
-        this.LogLevel = "dev";
+        this.LOG_LEVEL = "debug";
+        this.UPDATE_INTERVAL = 60
     }
 
     /**

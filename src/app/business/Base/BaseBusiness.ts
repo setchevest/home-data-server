@@ -1,15 +1,14 @@
 import IBaseBusiness from "../interfaces/base/IBaseBusiness";
-import RepositoryBase from "../../repository/base/RepositoryBase";
-import BaseModel from "../../model/BaseModel";
 import IModel from "../../model/interfaces/IModel";
-import { resolve } from "url";
+import IRepository from "../../repository/interfaces/IRepository";
+import { injectable } from "inversify";
 
-
+@injectable()
 export default abstract class BaseBusiness<T extends IModel> implements IBaseBusiness<T> {
 
-    protected repository: RepositoryBase<T>;
+    protected repository: IRepository<T>;
 
-    constructor(repository: RepositoryBase<T>) {
+    constructor(repository: IRepository<T>) {
         this.repository = repository;
     }
 
@@ -38,5 +37,9 @@ export default abstract class BaseBusiness<T extends IModel> implements IBaseBus
 
     public findById(id: string, callback?: (error: any, result: T) => void): Promise<T> {
         return this.repository.findById(id, callback);
+    }
+
+    public findOne(condition: any, callback?: (error: any, result: T) => void) : Promise<T>{
+        return this.repository.findOne(condition, callback);
     }
 }

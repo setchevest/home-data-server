@@ -2,68 +2,62 @@ import { Request, Response } from "express";
 import IThermostatModel, { ThermostatMode } from "../app/model/interfaces/IThermostatModel";
 import ThermostatBusiness from "../app/business/ThermostatBusiness";
 import BaseController from "./base/BaseController";
-import  apiController from "../core/Decorators/apiController"
 import autobind from "autobind-decorator";
-import { ArduinoThermostat } from "../app/devices/ArduinoThermostat";
+import ArduinoThermostat from "../app/devices/ArduinoThermostat";
+import logger from "../core/Logger";
+import ThermostatRepository from "../app/repository/ThermostatRepository";
+import { controller, httpGet, httpPost } from "inversify-express-utils";
+import IBaseBusiness from "../app/business/interfaces/base/IBaseBusiness";
+import { inject } from "inversify";
 
-@apiController("/api/thermostat")
 @autobind
+@controller("/api/thermostat")
 export default class ThermostatController extends BaseController<IThermostatModel> {
     
-    constructor() {
-        super(new ThermostatBusiness(new ArduinoThermostat()));
+    /**
+     *
+     */
+    constructor(@inject("IBaseBusiness<IThermostatModel>") business: IBaseBusiness<IThermostatModel>) {
+        super(business);
+        
     }
 
-    public getConfiguration(req: Request, res: Response): void {
-        (<ThermostatBusiness>this.business).getConfiguration((error, result)=>{
-            res.send(error ? error : result);
-        })
-    }
-
-    public setHeaterMode(req: Request, res: Response): void {
-        this.processRequest(req, res, () => {
-            var entity: IThermostatModel = <IThermostatModel>req.body;
-            res.send({ data: entity });
-        })
+    @httpGet("/config")
+    public getConfiguration(): Promise<any> {
+         return this.processRequest((<ThermostatBusiness>this.business).getConfiguration())
     }
     
-    public currentStatus(req: Request, res: Response): void {
-        (<ThermostatBusiness>this.business).getStatus((error, result) => {
-            res.send(error ? error : result);
-        });
+    @httpGet("/status")
+    public currentStatus(): Promise<any> {
+        return this.processRequest((<ThermostatBusiness>this.business).getStatus());
 
     }
 
-    public turnOn(req: Request, res: Response): void {
-        (<ThermostatBusiness>this.business).setPower(true, (error, result) => {
-            res.send(error ? error : result);
-        });
+    @httpPost("/event")
+    public postEvent(): Promise<any> {
+        //logger.debug(req.body);
+        // res.send({ no: "thing" });
+        return null;
+    }
+
+    @httpPost("/turnon")
+    public turnOn(): Promise<any> {
+        return this.processRequest((<ThermostatBusiness>this.business).setPower(true));
 
     }
 
-    public postEvent(req: Request, res: Response): void {
-        // this.business.setPower(true, (error, result) => {
-        //     res.send(error ? error : result);
-        // });
-        console.log(req.body);
-        res.send({ no: "thing" });
+    @httpPost("/turnoff")
+    public turnOff(): Promise<any> {
+        return this.processRequest((<ThermostatBusiness>this.business).setPower(false));
     }
 
-    public turnOff(req: Request, res: Response): void {
-        (<ThermostatBusiness>this.business).setPower(false, (error, result) => {
-            res.send(error ? error : result);
-        });
+    @httpPost("/setautomode")
+    public setAutoMode(): Promise<any> {
+        return this.processRequest((<ThermostatBusiness>this.business).setMode(ThermostatMode.Automatic));
     }
 
-    public setAutoMode(req: Request, res: Response): void {
-        (<ThermostatBusiness>this.business).setMode(ThermostatMode.Automatic, (error, result) => {
-            res.send(error ? error : result);
-        });
-    }
-
-    public setManualMode(req: Request, res: Response): void {
-        (<ThermostatBusiness>this.business).setMode(ThermostatMode.Manual, (error, result) => {
-            res.send(error ? error : result);
-        });
+    @httpPost("/setamanualmode")
+    public setManualMode(): Promise<any> {
+        return this.processRequest((<ThermostatBusiness>this.business).setMode(ThermostatMode.Manual));
     }
 }

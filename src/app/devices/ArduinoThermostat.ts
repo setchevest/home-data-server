@@ -3,6 +3,8 @@ import IThermostatDevice from "../devices/interfaces/IThermostatDevice"
 import AppConfig from "./../../config/AppConfig";
 import axios, { AxiosPromise } from "axios";
 import { ThermostatMode } from "../model/interfaces/IThermostatModel";
+import logger from "../../core/Logger";
+import { injectable } from 'inversify';
 
 // axios.interceptors.request.use(request => {
 //     console.log('Starting Request', request)
@@ -14,7 +16,9 @@ import { ThermostatMode } from "../model/interfaces/IThermostatModel";
 //     return request
 //   });
 
-export class ArduinoThermostat implements IThermostatDevice {
+
+@injectable()
+export default class ArduinoThermostat implements IThermostatDevice {
     
     get name(): string
     {
@@ -77,14 +81,14 @@ export class ArduinoThermostat implements IThermostatDevice {
                 // The request was made but no response was received
                 // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
                 // http.ClientRequest in node.js
-                console.log(error.request);
+                logger.error("The request was made but no response was received", error.request);
                 reject({
                   status: 444,
                   message: "The request was made but no response was received"
                 });
               } else {
                 // Something happened in setting up the request that triggered an Error
-                console.log("Error", error.message);
+                logger.error("Something happened in setting up the request that triggered an Error", error.message);
                 reject({
                   status: 417,
                   message: "Something happened in setting up the request that triggered an Error"

@@ -1,17 +1,23 @@
 import * as mongoose from "mongoose";
 import IRepository from "../interfaces/IRepository";
+import { injectable, unmanaged } from "inversify";
+import IModel from "../../model/interfaces/IModel";
 
-export default class RepositoryBase<T extends mongoose.Document> implements IRepository<T> {
+@injectable()
+export default class RepositoryBase<T extends IModel> implements IRepository<T> {
     
     private _model: mongoose.Model<T>;
+
+    /**
+     *
+     */
+    constructor(@unmanaged() model: mongoose.Model<T>) {
+        this._model = model;
+    }
 
     protected get model() : mongoose.Model<T>
     {
         return this._model;
-    }
-
-    constructor(schemaModel: mongoose.Model<T>) {
-        this._model = schemaModel;
     }
 
     public create(item: T, callback?: (error: any, result: T) => void) : Promise<T> {
