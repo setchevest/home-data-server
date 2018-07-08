@@ -14,8 +14,8 @@ export default class TaskRepository extends RepositoryBase<ITaskModel> {
 
     private readonly items: any[] = [
         // { name: "Check Status", action: "getStatus", trigger: <ITimeTriggerModel>{ recurrence: "0 */1 * * * *" } },
-        { name: "Turn On Heater", action: "thermostatOn", trigger: <ITimeTriggerModel>{ recurrence: "0 00 1 * * *" } },
-        { name: "Turn Off Heater", action: "thermostatOff", trigger: <ITimeTriggerModel>{ recurrence: "0 30 6 * * * *" } }
+        { name: "Turn Off Heater", action: "thermostatOff", trigger: <ITimeTriggerModel>{ recurrence: "0 00 1 * * *" } },
+        { name: "Turn On Heater", action: "thermostatOn", trigger: <ITimeTriggerModel>{ recurrence: "0 30 6 * * * *" } }
     ];
 
     public retrieve(callback?: (error: any, result: ITaskModel[]) => void): Promise<ITaskModel[]> {

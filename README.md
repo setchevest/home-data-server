@@ -1,6 +1,6 @@
 **Pull Requests are welcome ;)**
 
-# Quickstart application with Express, Typescript, Mongoose
+# Application with Express, Typescript, Mongoose
 This project is a starter for express, typescript and mongoose application, designed for Restful API's, but you can easily extend to make other things.
 
 I couldn't find any complete guide to archieve this, so i've looked many tutorials and posts about express with typescript and came up with seed application.
