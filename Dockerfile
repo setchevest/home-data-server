@@ -1,4 +1,5 @@
 FROM node:latest
+RUN ln -sf /usr/share/zoneinfo/America/Argentina/Buenos_Aires /etc/localtime
 RUN mkdir -p /usr/src/app/src
 COPY /src /usr/src/app/src/
 COPY package*.json /usr/src/app/
