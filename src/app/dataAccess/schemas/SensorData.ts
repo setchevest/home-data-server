@@ -1,6 +1,7 @@
-import DataAccess from "./../../dataAccess/DataAccess";
-import ISensorDataModel from "./../../model/interfaces/ISensorDataModel";
+import DataAccess from "../DataAccess";
+import ISensorDataModel from "../../model/interfaces/ISensorDataModel";
 import { Schema } from "mongoose";
+import IMongooseModel from "../interfaces/IMongooseModel";
 
 var mongooseConnection = DataAccess.mongooseConnection;
 
@@ -31,5 +32,9 @@ export class SensorData extends Schema {
         });
     }
 }
-var model = mongooseConnection.model<ISensorDataModel>("SensorData", new SensorData());
+
+export interface ISensorDataMongooseModel extends IMongooseModel, ISensorDataModel{
+
+}
+var model = mongooseConnection.model<ISensorDataMongooseModel>("SensorData", new SensorData());
 export default model;

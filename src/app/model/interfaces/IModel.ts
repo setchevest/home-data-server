@@ -1,4 +1,3 @@
-import * as mongoose from "mongoose";
-export default interface IModel extends mongoose.Document {
-  
+export default interface IModel {
+  _id?: any;
 }

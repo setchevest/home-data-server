@@ -1,6 +1,7 @@
-import DataAccess from "./../../dataAccess/DataAccess";
+import DataAccess from "../DataAccess";
 import { Schema } from "mongoose";
 import ITaskModel from "../../model/interfaces/ITaskModel";
+import IMongooseModel from "../interfaces/IMongooseModel";
 
 var mongooseConnection = DataAccess.mongooseConnection;
 
@@ -20,5 +21,10 @@ export class TaskSchema extends Schema {
             });
     }
 }
-var model = mongooseConnection.model<ITaskModel>("Task", new TaskSchema());
+
+export interface ITaskMongooseModel extends IMongooseModel, ITaskModel{
+
+}
+
+var model = mongooseConnection.model<ITaskMongooseModel>("Task", new TaskSchema());
 export default model;

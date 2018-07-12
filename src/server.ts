@@ -1,8 +1,9 @@
 import "reflect-metadata"
-import WebServer from "./WebServer";
-import ProcessManager from "./core/ProcessManager";
-import TaskRunner from "./TaskRunner";
 import { cleanUpMetadata } from "inversify-express-utils";
+cleanUpMetadata();
+import ProcessManager from "./core/ProcessManager";
+import container from "./config/inversify.config";
+import IProcess from "./core/IProcess";
 
 // cluster.on("fork", worker => {
 //     logger.debug("Worker Id: ", worker.id);
@@ -13,6 +14,7 @@ import { cleanUpMetadata } from "inversify-express-utils";
 
 
 const manager: ProcessManager = new ProcessManager()
-.addProcess(new WebServer())
-.addProcess(new TaskRunner())
-.runAll();
+container.getAll<IProcess>("IProcess").forEach(process => {
+    manager.addProcess(process)
+});
+manager.runAll();

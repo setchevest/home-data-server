@@ -3,9 +3,6 @@ import IThermostatModel, { ThermostatMode } from "../app/model/interfaces/ITherm
 import ThermostatBusiness from "../app/business/ThermostatBusiness";
 import BaseController from "./base/BaseController";
 import autobind from "autobind-decorator";
-import ArduinoThermostat from "../app/devices/ArduinoThermostat";
-import logger from "../core/Logger";
-import ThermostatRepository from "../app/repository/ThermostatRepository";
 import { controller, httpGet, httpPost } from "inversify-express-utils";
 import IBaseBusiness from "../app/business/interfaces/base/IBaseBusiness";
 import { inject } from "inversify";

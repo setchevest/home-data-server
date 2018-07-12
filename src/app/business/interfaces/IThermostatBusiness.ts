@@ -1,4 +1,4 @@
-import * as config from "app/model/interfaces/IThermostatConfig";
+import * as config from "../../model/interfaces/IThermostatConfig";
 import IBaseBusiness from "./base/IBaseBusiness";
 import IThermostatModel, { ThermostatMode } from "../../model/interfaces/IThermostatModel";
 

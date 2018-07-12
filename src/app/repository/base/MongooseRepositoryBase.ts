@@ -1,21 +1,22 @@
 import * as mongoose from "mongoose";
 import IRepository from "../interfaces/IRepository";
 import { injectable, unmanaged } from "inversify";
-import IModel from "../../model/interfaces/IModel";
+
+import IMongooseModel from "../../dataAccess/interfaces/IMongooseModel";
 
 @injectable()
-export default class RepositoryBase<T extends IModel> implements IRepository<T> {
+export default class MongooseRepositoryBase<T> implements IRepository<T> {
     
-    private _model: mongoose.Model<T>;
+    private _model: mongoose.Model<any>;
 
     /**
      *
      */
-    constructor(@unmanaged() model: mongoose.Model<T>) {
+    constructor(@unmanaged() model: mongoose.Model<any>) {
         this._model = model;
     }
 
-    protected get model() : mongoose.Model<T>
+    protected get model() : mongoose.Model<any>
     {
         return this._model;
     }
@@ -32,12 +33,12 @@ export default class RepositoryBase<T extends IModel> implements IRepository<T> 
         return this._model.update({ _id: id }, item, callback).exec();
     }
 
-    public delete(_id: string, callback?: (error: any, result: T) => void) : Promise<void> {
-        return this._model.remove({ _id: this.toObjectId(_id) }, (err) => callback(err, null)).exec();
+    public delete(id: string, callback?: (error: any)  => void) : Promise<void> {
+        return this._model.remove({ _id: this.toObjectId(id) }, callback).exec();
     }
 
     public findById(id: string, callback?: (error: any, result: T) => void) : Promise<T> {
-        return this._model.findById(id, callback).exec();
+        return this._model.findById(this.toObjectId(id), callback).exec();
     }
 
     public findOne(condition: any, callback?: (error: any, result: T) => void) : Promise<T> {

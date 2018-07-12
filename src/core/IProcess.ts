@@ -1,6 +1,7 @@
+import { EventEmitter } from "events";
 
-export default interface IProcess{
+export default interface IProcess {
     identifier : string | Symbol ;
-    start(): Promise<boolean>;
+    start(events: EventEmitter): Promise<boolean>;
     stop(): Promise<boolean>;
 }

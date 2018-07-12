@@ -1,13 +1,13 @@
 import IProcess from "./IProcess";
 import logger from "./Logger";
+import { EventEmitter } from "events";
 
-
-export default class ProcessManager {
+export default class ProcessManager extends EventEmitter {
 
     private processes: IProcess[] = [];
 
     constructor() {
-        
+        super();
     }
 
     public addProcess(process:IProcess) : ProcessManager {
@@ -29,7 +29,7 @@ export default class ProcessManager {
     
     private run(process: IProcess) {
         logger.info("Starting Process: ", process.identifier);
-        process.start();
+        process.start(this);
     }
 }
 

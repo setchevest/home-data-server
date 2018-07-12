@@ -8,10 +8,6 @@ export default class BaseModel<T extends IModel> {
    
    constructor(model: T) {
        this._model = model;
-   } 
-
-   get _id(): any {
-       return this._model._id;
    }
 
 }

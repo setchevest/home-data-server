@@ -1,4 +1,4 @@
-import AppConfig from "./config/AppConfig"
+import AppConfig from "./config/appConfig"
 import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
 import * as express from "express";
@@ -14,8 +14,10 @@ import container from "./config/inversify.config";
 import "./controllers/TemperatureSensorDataController";
 import "./controllers/ZoneController";
 import "./controllers/ThermostatController";
+import { injectable } from "inversify";
+import { EventEmitter } from "events";
 
-
+@injectable()
 export default class WebServer implements IProcess {
 
     get identifier(): string | Symbol {
@@ -54,7 +56,7 @@ export default class WebServer implements IProcess {
     }
 
     @autobind
-    public start(): Promise<boolean> {
+    public start(events: EventEmitter): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             this.httpServer = this.app.listen(this.port, () => {
                 resolve(true);

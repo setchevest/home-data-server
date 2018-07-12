@@ -1,5 +1,5 @@
 import * as Mongoose from "mongoose";
-import AppConfig from "./../../config/AppConfig";
+import AppConfig from "../../config/AppConfig";
 import logger from "../../core/Logger";
 
 export class DataAccess {
@@ -25,9 +25,9 @@ export class DataAccess {
 
         this._mongooseConnection = Mongoose.connection;
         this._mongooseConnection.once("open", () => {
-            logger.debug("CONNECTED TO MONGO AT: %s",AppConfig.Instance.MONGO_URI);
+            logger.debug("CONNECTED TO MONGO AT:",AppConfig.Instance.MONGO_URI);
         });
-        logger.debug("CONNECTING TO MONGO AT: %s",AppConfig.Instance.MONGO_URI);
+        logger.debug("CONNECTING TO MONGO AT:", AppConfig.Instance.MONGO_URI);
         var self = this;
         self._mongooseInstance = Mongoose.connect(AppConfig.Instance.MONGO_URI).catch(error=>{
             logger.error("CONNECTION ERROR", error);

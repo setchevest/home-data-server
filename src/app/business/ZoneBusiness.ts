@@ -1,10 +1,8 @@
 import BaseBusiness from "./Base/BaseBusiness";
 import IZoneModel from "../model/interfaces/IZoneModel";
-import ZoneRepository from "../repository/ZoneRepository";
 import { sealed } from "../../core/decorators/Sealed";
 import { injectable, inject } from 'inversify';
 import IRepository from "../repository/interfaces/IRepository";
-import { resolveCname } from "dns";
 
 @sealed
 @injectable()

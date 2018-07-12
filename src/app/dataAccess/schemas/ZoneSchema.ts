@@ -1,6 +1,7 @@
-import DataAccess from "./../../dataAccess/DataAccess";
+import DataAccess from "../DataAccess";
 import IZoneModel from "../../model/interfaces/IZoneModel";
 import { Schema } from "mongoose";
+import IMongooseModel from "../interfaces/IMongooseModel";
 
 var mongooseConnection = DataAccess.mongooseConnection;
 
@@ -32,5 +33,11 @@ export class ZoneSchema extends Schema {
         };
     }
 }
-var model = mongooseConnection.model<IZoneModel>("Zone", new ZoneSchema());
+
+export interface IZoneMongooseModel extends IMongooseModel, IZoneModel{
+
+}
+
+
+var model = mongooseConnection.model<IZoneMongooseModel>("Zone", new ZoneSchema());
 export default model;

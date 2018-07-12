@@ -1,6 +1,6 @@
-import { IThermostatConfig, IThermostatResponse } from "app/model/interfaces/IThermostatConfig";
-import IThermostatDevice from "../devices/interfaces/IThermostatDevice"
-import AppConfig from "./../../config/AppConfig";
+import { IThermostatConfig, IThermostatResponse } from "../model/interfaces/IThermostatConfig";
+import IThermostatDevice from "./interfaces/IThermostatDevice"
+import AppConfig from "../../config/AppConfig";
 import axios, { AxiosPromise } from "axios";
 import { ThermostatMode } from "../model/interfaces/IThermostatModel";
 import logger from "../../core/Logger";

@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { injectable, inject } from 'inversify';
 import IThermostatModel, { ThermostatMode } from "../model/interfaces/IThermostatModel";
 import IThermostatBusiness from "./interfaces/IThermostatBusiness";
-import { IThermostatResponse } from "app/model/interfaces/IThermostatConfig";
+import { IThermostatResponse } from "../model/interfaces/IThermostatConfig";
 import BaseBusiness from "./Base/BaseBusiness";
 import ITemperatureSensorDataModel from "../model/interfaces/ITemperatureSensorDataModel";
 import { sealed } from "../../core/decorators/Sealed";

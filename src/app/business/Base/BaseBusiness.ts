@@ -31,7 +31,7 @@ export default abstract class BaseBusiness<T extends IModel> implements IBaseBus
         });
     }
 
-    public delete(id: string, callback?: (error: any, result: T) => void): Promise<void> {
+    public delete(id: string, callback?: (error: any) => void): Promise<void> {
         return this.repository.delete(id, callback);
     }
 

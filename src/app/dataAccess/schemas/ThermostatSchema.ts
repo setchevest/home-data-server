@@ -1,6 +1,7 @@
-import DataAccess from "./../../dataAccess/DataAccess";
-import IThermostatModel from "./../../model/interfaces/IThermostatModel";
+import DataAccess from "../DataAccess";
+import IThermostatModel from "../../model/interfaces/IThermostatModel";
 import { Schema, Model } from "mongoose";
+import IMongooseModel from "../interfaces/IMongooseModel";
 
 var mongooseConnection = DataAccess.mongooseConnection;
 
@@ -25,5 +26,10 @@ export class ThermostatSchema extends Schema {
 
     }
 }
-var model: Model<IThermostatModel> = mongooseConnection.model<IThermostatModel>("Thermostat", new ThermostatSchema());
+
+export interface IThermostatMongooseModel extends IMongooseModel, IThermostatModel{
+
+}
+
+var model: Model<IThermostatMongooseModel> = mongooseConnection.model<IThermostatMongooseModel>("Thermostat", new ThermostatSchema());
 export default model;
