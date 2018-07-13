@@ -1,7 +1,7 @@
-import IBaseBusiness from "../interfaces/base/IBaseBusiness";
-import IModel from "../../model/interfaces/IModel";
-import IRepository from "../../repository/interfaces/IRepository";
-import { injectable } from "inversify";
+import IBaseBusiness from '../interfaces/base/IBaseBusiness';
+import IModel from '../../model/interfaces/IModel';
+import IRepository from '../../repository/interfaces/IRepository';
+import { injectable } from 'inversify';
 
 @injectable()
 export default abstract class BaseBusiness<T extends IModel> implements IBaseBusiness<T> {
@@ -39,7 +39,7 @@ export default abstract class BaseBusiness<T extends IModel> implements IBaseBus
         return this.repository.findById(id, callback);
     }
 
-    public findOne(condition: any, callback?: (error: any, result: T) => void) : Promise<T>{
+    public findOne(condition: any, callback?: (error: any, result: T) => void): Promise<T> {
         return this.repository.findOne(condition, callback);
     }
 }

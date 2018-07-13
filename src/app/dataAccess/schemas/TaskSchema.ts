@@ -1,9 +1,9 @@
-import DataAccess from "../DataAccess";
-import { Schema } from "mongoose";
-import ITaskModel from "../../model/interfaces/ITaskModel";
-import IMongooseModel from "../interfaces/IMongooseModel";
+import DataAccess from '../DataAccess';
+import { Schema } from 'mongoose';
+import ITaskModel from '../../model/interfaces/ITaskModel';
+import IMongooseModel from '../interfaces/IMongooseModel';
 
-var mongooseConnection = DataAccess.mongooseConnection;
+const mongooseConnection = DataAccess.mongooseConnection;
 
 export class TaskSchema extends Schema {
     /**
@@ -17,14 +17,14 @@ export class TaskSchema extends Schema {
             trigger: { type: String },
         },
             {
-                timestamps: true
+                timestamps: true,
             });
     }
 }
 
-export interface ITaskMongooseModel extends IMongooseModel, ITaskModel{
+export interface ITaskMongooseModel extends IMongooseModel, ITaskModel {
 
 }
 
-var model = mongooseConnection.model<ITaskMongooseModel>("Task", new TaskSchema());
+const model = mongooseConnection.model<ITaskMongooseModel>('Task', new TaskSchema());
 export default model;

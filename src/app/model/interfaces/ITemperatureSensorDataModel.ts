@@ -1,4 +1,4 @@
-import ISensorDataModel from "./ISensorDataModel";
+import ISensorDataModel from './ISensorDataModel';
 
 export default interface ITemperatureSensorDataModel extends ISensorDataModel {
   temperature: number;

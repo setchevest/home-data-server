@@ -1,18 +1,18 @@
-import IProcess from "./core/IProcess";
-import ThermostatBusiness from "./app/business/ThermostatBusiness";
-import autobind from "autobind-decorator";
-import logger from "./core/Logger";
-import * as schedule from 'node-schedule'
+import IProcess from './core/IProcess';
+import ThermostatBusiness from './app/business/ThermostatBusiness';
+import autobind from 'autobind-decorator';
+import logger from './core/Logger';
+import * as schedule from 'node-schedule';
 import ITaskModel from './app/model/interfaces/ITaskModel';
-import IRepository from "./app/repository/interfaces/IRepository";
-import ITimeTriggerModel from "./app/model/interfaces/ITimeTriggerModel";
-import { injectable, inject } from "inversify";
-import { EventEmitter } from "events";
+import IRepository from './app/repository/interfaces/IRepository';
+import ITimeTriggerModel from './app/model/interfaces/ITimeTriggerModel';
+import { injectable, inject } from 'inversify';
+import { EventEmitter } from 'events';
 
 export enum jobEvents {
-    started = "runned",
-    finnidhed = "finnidhed",
-    error = "error",
+    started = 'runned',
+    finnidhed = 'finnidhed',
+    error = 'error',
 }
 @injectable()
 export default class TaskRunner implements IProcess {
@@ -20,18 +20,18 @@ export default class TaskRunner implements IProcess {
     private jobs: string[] = [];
 
     get identifier(): string | Symbol {
-        return "TaskRunner";
+        return 'TaskRunner';
     }
 
-    constructor(@inject("ThermostatBusiness") private thermostatBusiness: ThermostatBusiness,
-        @inject("IRepository<ITaskModel>") private taskRepo: IRepository<ITaskModel>) {
+    constructor(@inject('ThermostatBusiness') private thermostatBusiness: ThermostatBusiness,
+        @inject('IRepository<ITaskModel>') private taskRepo: IRepository<ITaskModel>) {
 
     }
 
     @autobind
     public start(events: EventEmitter): Promise<boolean> {
-        events.removeListener("configChanged", this.configurationChanged)
-            .on("configChanged", this.configurationChanged);
+        events.removeListener('configChanged', this.configurationChanged)
+            .on('configChanged', this.configurationChanged);
 
         return this.load();
     }
@@ -51,7 +51,7 @@ export default class TaskRunner implements IProcess {
         return new Promise<boolean>((resolve, reject) => {
             this.taskRepo.retrieve().then(tasks => {
                 tasks.forEach(task => {
-                    let job = schedule.scheduledJobs[task.name];
+                    const job = schedule.scheduledJobs[task.name];
                     if (job) {
                         job.reschedule(task.action);
                     } else {
@@ -68,7 +68,7 @@ export default class TaskRunner implements IProcess {
     }
 
     private scheduleTask(task: ITaskModel) {
-        let job = schedule.scheduleJob(task.name, (<ITimeTriggerModel>task.trigger).recurrence,
+        const job = schedule.scheduleJob(task.name, (<ITimeTriggerModel>task.trigger).recurrence,
             () => {
                 try {
                     job.emit(jobEvents.started, task);
@@ -77,16 +77,16 @@ export default class TaskRunner implements IProcess {
                 } catch (error) {
                     job.emit(jobEvents.error, error);
                 }
-            }
-        ).on(jobEvents.finnidhed, (task) => {
-            logger.debug('Job next execution: ', job.name, job.nextInvocation())
-            logger.info("Job executed", task);
-        }).on(jobEvents.error, (task) => {
-            logger.error("Job error", task);
-        }).on(jobEvents.started, (task) => {
-            logger.debug("Job started", task);
+            },
+        ).on(jobEvents.finnidhed, (item) => {
+            logger.debug('Job next execution: ', job.name, job.nextInvocation());
+            logger.info('Job executed', item);
+        }).on(jobEvents.error, (item) => {
+            logger.error('Job error', item);
+        }).on(jobEvents.started, (item) => {
+            logger.debug('Job started', item);
         });
-        logger.debug('Job next execution: ', job.name, job.nextInvocation())
+        logger.debug('Job next execution: ', job.name, job.nextInvocation());
         this.jobs.push(task._id);
     }
 

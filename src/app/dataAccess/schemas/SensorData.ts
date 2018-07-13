@@ -1,9 +1,9 @@
-import DataAccess from "../DataAccess";
-import ISensorDataModel from "../../model/interfaces/ISensorDataModel";
-import { Schema } from "mongoose";
-import IMongooseModel from "../interfaces/IMongooseModel";
+import DataAccess from '../DataAccess';
+import ISensorDataModel from '../../model/interfaces/ISensorDataModel';
+import { Schema } from 'mongoose';
+import IMongooseModel from '../interfaces/IMongooseModel';
 
-var mongooseConnection = DataAccess.mongooseConnection;
+const mongooseConnection = DataAccess.mongooseConnection;
 
 export class SensorData extends Schema {
 
@@ -14,13 +14,13 @@ export class SensorData extends Schema {
         super({
             type: {
                 type: String,
-                required: true
+                required: true,
             },
             zone: {
                 type: Schema.Types.ObjectId,
-                ref: "Zone",
+                ref: 'Zone',
                 required: true,
-            }
+            },
         },
             {
                 discriminatorKey: 'type',
@@ -28,13 +28,12 @@ export class SensorData extends Schema {
             });
         
         this.pre('find', function () {
-            this.populate("zone");
+            this.populate('zone');
         });
     }
 }
 
-export interface ISensorDataMongooseModel extends IMongooseModel, ISensorDataModel{
-
+export interface ISensorDataMongooseModel extends IMongooseModel, ISensorDataModel {
 }
-var model = mongooseConnection.model<ISensorDataMongooseModel>("SensorData", new SensorData());
+const model = mongooseConnection.model<ISensorDataMongooseModel>('SensorData', new SensorData());
 export default model;

@@ -1,4 +1,3 @@
-export default interface IDevice
-{
+export default interface IDevice {
     name: string;
 }

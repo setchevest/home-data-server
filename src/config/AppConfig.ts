@@ -1,13 +1,9 @@
-import * as dotenv from "dotenv";
+import * as dotenv from 'dotenv';
+import IAppConfig from './IAppConfig';
+import { injectable } from '../../node_modules/inversify';
 
-export default class AppConfig {
-
-    private static _instance: AppConfig;
-    
-
-    public static get Instance() {
-        return this._instance || (this._instance = new AppConfig());
-    }
+@injectable()
+export class AppConfig implements IAppConfig {
     private envFile = 'src/.env';
 
     public readonly MONGO_URI: string;
@@ -21,8 +17,8 @@ export default class AppConfig {
         this.MONGO_URI = process.env.MONGO_URI;
         this.PORT = process.env.PORT ? Number.parseInt(process.env.PORT) : 8080;
         this.THERMOSTAT_URL = process.env.THERMOSTAT_URL;
-        this.LOG_LEVEL = "debug";
-        this.UPDATE_INTERVAL = 60
+        this.LOG_LEVEL = 'debug';
+        this.UPDATE_INTERVAL = 60;
     }
 
     /**
@@ -36,3 +32,6 @@ export default class AppConfig {
         dotenv.config({ path: this.envFile });
     }
 }
+
+const current: IAppConfig = new AppConfig();
+export default current;

@@ -35,9 +35,9 @@ export interface IThermostatHeater  {
 }
 
 export interface IThermostatZone  {
-  id:number;
-  temp:number;
-  hum?:number;
+  id: number;
+  temp: number;
+  hum?: number;
 }
 
 // {"fm":224,"lu":55,"mode":"Manual","heater":{"status":"OFF"},"zones":[{"id":2,"temp":27,"hum":41}]}

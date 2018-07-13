@@ -8,13 +8,13 @@ const greaterOrEqual = (n: number)  => {
                 throw new Error(`Value smaller than ${n}`);
             }
             value = val;
-        }
+        };
         Reflect.deleteProperty[key];
         Reflect.defineProperty(target, key, {
             get: getter,
-            set: setter
+            set: setter,
         });
-    }
+    };
 };
 
 export default greaterOrEqual;

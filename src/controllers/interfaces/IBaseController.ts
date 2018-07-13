@@ -1,7 +1,6 @@
-import IReadController from "./IReadController";
-import IWriteController from "./IWriteController";
+import IReadController from './IReadController';
+import IWriteController from './IWriteController';
 
-export default interface IBaseController<T> extends IReadController, IWriteController
-{
+export default interface IBaseController<T> extends IReadController, IWriteController {
 
 }

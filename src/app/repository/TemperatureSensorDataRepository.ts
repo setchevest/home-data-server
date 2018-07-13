@@ -1,12 +1,12 @@
-import model from "../dataAccess/schemas/TemperatureSensorData"
-import MongooseRepositoryBase from "./base/MongooseRepositoryBase";
-import ITemperatureSensorDataModel from "../model/interfaces/ITemperatureSensorDataModel";
-import { sealed } from "../../core/decorators/Sealed";
+import model from '../dataAccess/schemas/TemperatureSensorData';
+import MongooseRepository from './base/MongooseRepository';
+import ITemperatureSensorDataModel from '../model/interfaces/ITemperatureSensorDataModel';
+import { sealed } from '../../core/decorators/Sealed';
 import { injectable } from 'inversify';
 
 @sealed
 @injectable()
-export class TemperatureSensorDataRepository extends MongooseRepositoryBase<ITemperatureSensorDataModel> {
+export class TemperatureSensorDataRepository extends MongooseRepository<ITemperatureSensorDataModel> {
     constructor() {
          super(model);
     }

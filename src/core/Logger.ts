@@ -1,5 +1,7 @@
-import * as winston from "winston"
-import AppConfig from "../config/AppConfig"
+import * as winston from 'winston';
+import container from '../config/inversify.config';
+import IAppConfig from '../config/AppConfig';
+
 
 export interface ILogger {
     error(message, ...data: any[]): void;
@@ -11,19 +13,21 @@ export interface ILogger {
 
 class Logger implements ILogger {
 
-    logger = winston.createLogger({
-        level: AppConfig.Instance.LOG_LEVEL,
-        format: winston.format.json(),
-        // transports: [
-        //     new winston.transports.File({ filename: 'error.log', level: 'error' }),
-        //     new winston.transports.File({ filename: 'combined.log' })
-        // ]
-    });
+    private logger: winston.Logger;
 
     /**
      *
      */
     constructor() {
+        this.logger = winston.createLogger({
+            level: IAppConfig.LOG_LEVEL,
+            format: winston.format.json(),
+            // transports: [
+            //     new winston.transports.File({ filename: 'error.log', level: 'error' }),
+            //     new winston.transports.File({ filename: 'combined.log' })
+            // ]
+        });
+        
         if (process.env.NODE_ENV !== 'production') {
             this.logger.add(new winston.transports.Console({
                 format: winston.format.combine(
@@ -43,7 +47,7 @@ class Logger implements ILogger {
     }
 
     public debug(message: any, ...data: any[]): void {
-        this.logger.debug(message,data);
+        this.logger.debug(message, data);
     }
 
     public warning(message: any, ...data: any[]): void {

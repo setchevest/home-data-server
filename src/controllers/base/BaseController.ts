@@ -1,10 +1,10 @@
-import * as express from "express";
-import IBaseBusiness from "../../app/business/interfaces/base/IBaseBusiness";
-import autobind from "autobind-decorator";
-import logger from "../../core/Logger";
-import IBaseController from "../interfaces/IBaseController";
-import { httpGet, httpPost, httpPut, httpDelete, request, response } from "inversify-express-utils";
-import { injectable } from "inversify";
+import * as express from 'express';
+import IBaseBusiness from '../../app/business/interfaces/base/IBaseBusiness';
+import autobind from 'autobind-decorator';
+import logger from '../../core/Logger';
+import IBaseController from '../interfaces/IBaseController';
+import { httpGet, httpPost, httpPut, httpDelete, request, response } from 'inversify-express-utils';
+import { injectable } from 'inversify';
 
 @autobind
 @injectable()
@@ -19,35 +19,35 @@ export default class BaseController<T> implements IBaseController<T> {
         this._business = business;
     }
 
-    @httpPost("/")
+    @httpPost('/')
     public create(@request() req: express.Request, @response() res: express.Response): any {
-        var entity: T = <T>req.body;
+        const entity: T = <T>req.body;
         return this.processRequest(this.business.create(entity));
     }
 
-    @httpPut("/:_id")
+    @httpPut('/:_id')
     public update(@request() req: express.Request, @response() res: express.Response): any {
 
-        var entity: T = <T>req.body;
-        var _id: string = req.params._id;
+        const entity: T = <T>req.body;
+        const _id: string = req.params._id;
         return this.processRequest(this.business.update(_id, entity));
     }
 
-    @httpDelete("/:_id")
+    @httpDelete('/:_id')
     public delete(@request() req: express.Request, @response() res: express.Response): any {
-        var _id: string = req.params._id;
+        const _id: string = req.params._id;
         return this.processRequest(this.business.delete(_id));
     }
 
-    @httpGet("/")
+    @httpGet('/')
     public retrieve(@request() req: express.Request, @response() res: express.Response): any {
         return this.processRequest(this.business.retrieve());
     }
 
-    @httpGet("/byid/:_id")
+    @httpGet('/byid/:_id')
     public findById(@request() req: express.Request, @response() res: express.Response): any {
 
-        var _id: string = req.params._id;
+        const _id: string = req.params._id;
         return this.processRequest(this.business.findById(_id));
     }
 
@@ -56,8 +56,7 @@ export default class BaseController<T> implements IBaseController<T> {
             try {
                 promise.then(item => resolve(this.createSuccessResponse(item)))
                     .catch(item => reject(this.createErrorResponse(item)));
-            }
-            catch (e) {
+            } catch (e) {
                 logger.error(e);
                 reject(this.createErrorResponse(e));
             }
@@ -65,11 +64,11 @@ export default class BaseController<T> implements IBaseController<T> {
     }
 
     protected createErrorResponse(error: any): any {
-        return { status: "error", error: "An error has occured", errorMessage: error.message, errorDetails: error.stack };
+        return { status: 'error', error: 'An error has occured', errorMessage: error.message, errorDetails: error.stack };
     }
 
     protected createSuccessResponse(data: any): any {
-        return { status: "success", data: data };
+        return { status: 'success', data: data };
     }
 
 }

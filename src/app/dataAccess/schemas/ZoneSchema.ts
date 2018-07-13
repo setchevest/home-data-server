@@ -1,9 +1,9 @@
-import DataAccess from "../DataAccess";
-import IZoneModel from "../../model/interfaces/IZoneModel";
-import { Schema } from "mongoose";
-import IMongooseModel from "../interfaces/IMongooseModel";
+import DataAccess from '../DataAccess';
+import IZoneModel from '../../model/interfaces/IZoneModel';
+import { Schema } from 'mongoose';
+import IMongooseModel from '../interfaces/IMongooseModel';
 
-var mongooseConnection = DataAccess.mongooseConnection;
+const mongooseConnection = DataAccess.mongooseConnection;
 
 export class ZoneSchema extends Schema {
     /**
@@ -14,14 +14,14 @@ export class ZoneSchema extends Schema {
             internalId: {
                 type: Number,
                 required: true,
-                index: true
+                index: true,
             },
             name: {
                 type: String,
-                required: true
+                required: true,
             }},
             {
-                timestamps: true
+                timestamps: true,
             });
 
         this.query.byName = function (name) {
@@ -34,10 +34,10 @@ export class ZoneSchema extends Schema {
     }
 }
 
-export interface IZoneMongooseModel extends IMongooseModel, IZoneModel{
+export interface IZoneMongooseModel extends IMongooseModel, IZoneModel {
 
 }
 
 
-var model = mongooseConnection.model<IZoneMongooseModel>("Zone", new ZoneSchema());
+const model = mongooseConnection.model<IZoneMongooseModel>('Zone', new ZoneSchema());
 export default model;

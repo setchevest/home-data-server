@@ -1,6 +1,6 @@
 
-import IModel from "./IModel";
-import ITriggerModel from './ITriggerModel'
+import IModel from './IModel';
+import ITriggerModel from './ITriggerModel';
 
 export default interface ITaskModel extends IModel {
   name: string;

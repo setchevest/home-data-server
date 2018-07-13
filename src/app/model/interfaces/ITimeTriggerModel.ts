@@ -1,4 +1,4 @@
-import ITriggerModel from "./ITriggerModel";
+import ITriggerModel from './ITriggerModel';
 
 /* Recurrence
 *    *    *    *    *    *

@@ -1,5 +1,5 @@
-import IModel from "./interfaces/IModel";
-import { sealed } from "../../core/decorators/Sealed";
+import IModel from './interfaces/IModel';
+import { sealed } from '../../core/decorators/Sealed';
 
 @sealed
 export default class BaseModel<T extends IModel> {

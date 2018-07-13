@@ -1,4 +1,4 @@
-import IModel from "./IModel";
+import IModel from './IModel';
 
 export default interface IZoneModel extends IModel {
   internalId: number;
