@@ -20,6 +20,13 @@ import TaskRunner from '../TaskRunner';
 import WebServer from '../WebServer';
 import IAppConfig from './IAppConfig';
 import {AppConfig} from './AppConfig';
+import TaskBusiness from '../app/business/TaskBusiness';
+import ITimeTriggerModel from '../app/model/interfaces/ITimeTriggerModel';
+import TimeTriggerBusiness from '../app/business/TimeTriggerBusiness';
+import { IFunctionActionModel } from '../app/model/interfaces/IFunctionActionModel';
+import FunctionActionBusiness from '../app/business/FunctionActionBusiness';
+import TimeTriggerRepository from '../app/repository/TimeTriggerRepository';
+import FunctionActionRepository from '../app/repository/FunctionActionRepository';
 
 const container = new Container(
     {
@@ -28,21 +35,24 @@ const container = new Container(
     });
 
 container.bind<IAppConfig>('IAppConfig').to(AppConfig).inSingletonScope();
+container.bind<IThermostatDevice>('IThermostatDevice').to(ArduinoThermostat).inRequestScope();
+
 container.bind<IRepository<ITemperatureSensorDataModel>>('IRepository<ITemperatureSensorDataModel>').to(TemperatureSensorDataRepository).inRequestScope();
 container.bind<IRepository<IZoneModel>>('IRepository<IZoneModel>').to(ZoneRepository).inRequestScope();
 container.bind<IRepository<IThermostatModel>>('IRepository<IThermostatModel>').to(ThermostatRepository).inRequestScope();
 container.bind<IRepository<ITaskModel>>('IRepository<ITaskModel>').to(TaskRepository).inSingletonScope();
-container.bind<IThermostatDevice>('IThermostatDevice').to(ArduinoThermostat).inRequestScope();
+container.bind<IRepository<ITimeTriggerModel>>('IRepository<ITimeTriggerModel>').to(TimeTriggerRepository).inRequestScope();
+container.bind<IRepository<IFunctionActionModel>>('IRepository<IFunctionActionModel>').to(FunctionActionRepository).inRequestScope();
 container.bind<IBaseBusiness<ITemperatureSensorDataModel>>('IBaseBusiness<ITemperatureSensorDataModel>').to(TemperatureSensorDataBusiness);
 container.bind<IBaseBusiness<IZoneModel>>('IBaseBusiness<IZoneModel>').to(ZoneBusiness);
+container.bind<IBaseBusiness<IFunctionActionModel>>('IBaseBusiness<IFunctionActionModel>').to(FunctionActionBusiness);
+container.bind<IBaseBusiness<ITimeTriggerModel>>('IBaseBusiness<ITimeTriggerModel>').to(TimeTriggerBusiness);
 container.bind<IBaseBusiness<IThermostatModel>>('IBaseBusiness<IThermostatModel>').to(ThermostatBusiness);
+container.bind<IBaseBusiness<ITaskModel>>('IBaseBusiness<ITaskModel>').to(TaskBusiness);
 container.bind<ThermostatBusiness>('ThermostatBusiness').to(ThermostatBusiness);
 
 
 container.bind<IProcess>('IProcess').to(TaskRunner).inSingletonScope();
 container.bind<IProcess>('IProcess').to(WebServer).inSingletonScope();
 
-
-// tslint:disable-next-line:no-console
-console.debug('Initialized container');
 export default container;

@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
 import IAppConfig from './IAppConfig';
-import { injectable } from '../../node_modules/inversify';
+import { injectable } from 'inversify';
 
 @injectable()
 export class AppConfig implements IAppConfig {

@@ -1,11 +1,11 @@
+import { ISensorDataMongooseModel } from '../interfaces/ISensorDataMongooseModel';
+
 import DataAccess from '../DataAccess';
-import ISensorDataModel from '../../model/interfaces/ISensorDataModel';
 import { Schema } from 'mongoose';
-import IMongooseModel from '../interfaces/IMongooseModel';
 
 const mongooseConnection = DataAccess.mongooseConnection;
 
-export class SensorData extends Schema {
+export class SensorDataSchema extends Schema {
 
     /**
      *
@@ -33,7 +33,5 @@ export class SensorData extends Schema {
     }
 }
 
-export interface ISensorDataMongooseModel extends IMongooseModel, ISensorDataModel {
-}
-const model = mongooseConnection.model<ISensorDataMongooseModel>('SensorData', new SensorData());
+const model = mongooseConnection.model<ISensorDataMongooseModel>('SensorData', new SensorDataSchema());
 export default model;

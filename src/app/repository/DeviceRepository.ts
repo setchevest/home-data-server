@@ -1,14 +1,13 @@
-import model from '../dataAccess/schemas/ZoneSchema';
+import model from '../dataAccess/schemas/DeviceSchema';
 import MongooseRepository from './base/MongooseRepository';
-import IZoneModel from '../model/interfaces/IZoneModel';
 import { sealed } from '../../core/decorators/Sealed';
 import { injectable } from 'inversify';
 
+import IDeviceModel from '../model/interfaces/IDeviceModel';
 @sealed
 @injectable()
-export default class ZoneRepository extends MongooseRepository<IZoneModel> {
+export default class DeviceRepository extends MongooseRepository<IDeviceModel> {
     constructor() {
         super(model);
-   }
+    }
 }
-

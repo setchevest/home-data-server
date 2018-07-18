@@ -1,7 +1,7 @@
+import { ITaskMongooseModel } from '../interfaces/ITaskMongooseModel';
+
 import DataAccess from '../DataAccess';
 import { Schema } from 'mongoose';
-import ITaskModel from '../../model/interfaces/ITaskModel';
-import IMongooseModel from '../interfaces/IMongooseModel';
 
 const mongooseConnection = DataAccess.mongooseConnection;
 
@@ -13,17 +13,26 @@ export class TaskSchema extends Schema {
         super({
             name: { type: String, required: true },
             enabled: { type: String, required: true },
-            action: { type: String },
-            trigger: { type: String },
+            action: {
+                type: Schema.Types.ObjectId,
+                ref: 'Action',
+                required: true,
+            },
+            trigger: {
+                type: Schema.Types.ObjectId,
+                ref: 'Trigger',
+                required: true,
+            },
         },
             {
                 timestamps: true,
             });
+
+        this.pre('find', function () {
+            this.populate('action');
+            this.populate('trigger');
+        });
     }
-}
-
-export interface ITaskMongooseModel extends IMongooseModel, ITaskModel {
-
 }
 
 const model = mongooseConnection.model<ITaskMongooseModel>('Task', new TaskSchema());

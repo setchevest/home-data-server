@@ -41,7 +41,19 @@ export default class BaseController<T> implements IBaseController<T> {
 
     @httpGet('/')
     public retrieve(@request() req: express.Request, @response() res: express.Response): any {
-        return this.processRequest(this.business.retrieve());
+        return this.processRequest(this.business.retrieve(req.body));
+    }
+
+    @httpGet('/where:condition')
+    public retrieveWhere(@request() req: express.Request, @response() res: express.Response): any {
+        return this.processRequest(this.business.retrieve(JSON.parse(decodeURIComponent(req.params.condition))));
+    }
+
+    @httpGet('/page:page/:limit?')
+    public retrieveMany(@request() req: express.Request, @response() res: express.Response): any {
+        const page: number = req.params.page;
+        const limit: number = req.params.limit;
+        return this.processRequest(this.business.retrieveMany(limit, page - 1));
     }
 
     @httpGet('/byid/:_id')

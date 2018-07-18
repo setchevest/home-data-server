@@ -1,7 +1,7 @@
+import { IThermostatMongooseModel } from '../interfaces/IThermostatMongooseModel';
+
 import DataAccess from '../DataAccess';
-import IThermostatModel from '../../model/interfaces/IThermostatModel';
 import { Schema, Model } from 'mongoose';
-import IMongooseModel from '../interfaces/IMongooseModel';
 
 const mongooseConnection = DataAccess.mongooseConnection;
 
@@ -25,10 +25,6 @@ export class ThermostatSchema extends Schema {
             });
 
     }
-}
-
-export interface IThermostatMongooseModel extends IMongooseModel, IThermostatModel {
-
 }
 
 const model: Model<IThermostatMongooseModel> = mongooseConnection.model<IThermostatMongooseModel>('Thermostat', new ThermostatSchema());

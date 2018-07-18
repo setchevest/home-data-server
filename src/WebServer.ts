@@ -1,9 +1,9 @@
-import AppConfig from './config/AppConfig';
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import * as express from 'express';
 import * as path from 'path';
 import * as http from 'http';
+import IAppConfig from './config/IAppConfig';
 import IProcess from './core/IProcess';
 import autobind from 'autobind-decorator';
 import logger from './core/Logger';
@@ -14,9 +14,12 @@ import container from './config/inversify.config';
 import './controllers/TemperatureSensorDataController';
 import './controllers/ZoneController';
 import './controllers/ThermostatController';
+import './controllers/TaskController';
+import './controllers/TimeTriggerController';
+import './controllers/FunctionActionController';
 import { injectable, inject } from 'inversify';
 import { EventEmitter } from 'events';
-import IAppConfig from './config/IAppConfig';
+
 
 @injectable()
 export default class WebServer implements IProcess {
@@ -39,7 +42,7 @@ export default class WebServer implements IProcess {
 
     constructor(@inject('IAppConfig') private appConfig: IAppConfig) {
         // Start App
-        this.port = this.normalizePort(appConfig.PORT);
+        this.port = this.normalizePort(this.appConfig.PORT);
         this.server = new InversifyExpressServer(container);
         this.app = this.server
             .setConfig(app => {
@@ -57,8 +60,8 @@ export default class WebServer implements IProcess {
                 // this.setRoutes(app);
             }).setErrorConfig(app =>
                 app.use((err, req, res, next) => {
-                    logger.error('Web server error', err);
-                    res.status(500).send(err);
+                    logger.error('Web server error', err.message || err);
+                    res.status(500).send({error: 'Internal server error. Please contact your administrator.'});
                 })).build();
     }
 
@@ -133,14 +136,6 @@ export default class WebServer implements IProcess {
         // Set static route for public folder
         const staticFolferPath = path.join(__dirname, '/public');
         app.use(express.static(staticFolferPath, { redirect: false }));
-    }
-
-    /**
-     * Set routes
-     */
-    private setRoutes(app: express.Application) {
-        // Create Routes, and export its configured Express.Router
-        //    app.use(BaseRoutes.routes);
     }
 
     /**

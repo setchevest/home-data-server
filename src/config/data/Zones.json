@@ -1,0 +1,14 @@
+[
+    {
+        "internalId": 1,
+        "name": "Cocina"
+    },
+    {
+        "internalId": 2,
+        "name": "Baño"
+    },
+    {
+        "internalId": 3,
+        "name": "Estudio"
+    }
+]

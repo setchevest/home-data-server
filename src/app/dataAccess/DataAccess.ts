@@ -1,5 +1,4 @@
 import * as Mongoose from 'mongoose';
-import container from '../../config/inversify.config';
 import logger from '../../core/Logger';
 import IAppConfig from '../../config/AppConfig';
 

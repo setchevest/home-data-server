@@ -1,4 +1,4 @@
-import model from '../dataAccess/schemas/TemperatureSensorData';
+import model from '../dataAccess/schemas/TemperatureSensorDataSchema';
 import MongooseRepository from './base/MongooseRepository';
 import ITemperatureSensorDataModel from '../model/interfaces/ITemperatureSensorDataModel';
 import { sealed } from '../../core/decorators/Sealed';

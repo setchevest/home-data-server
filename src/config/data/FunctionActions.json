@@ -1,0 +1,12 @@
+[
+    {
+        "name": "Thermostat Off",
+        "source": "this",
+        "functionName": "thermostatOff"
+    },
+    {
+        "name": "Thermostat On",
+        "source": "this",
+        "functionName": "thermostatOn"
+    }
+]

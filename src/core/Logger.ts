@@ -1,5 +1,4 @@
 import * as winston from 'winston';
-import container from '../config/inversify.config';
 import IAppConfig from '../config/AppConfig';
 
 

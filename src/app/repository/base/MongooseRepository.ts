@@ -2,10 +2,11 @@ import * as mongoose from 'mongoose';
 import IRepository from '../interfaces/IRepository';
 import { injectable, unmanaged } from 'inversify';
 import IModel from '../../model/interfaces/IModel';
+import logger from '../../../core/Logger';
 
 @injectable()
 export default class MongooseRepository<T extends IModel> implements IRepository<T> {
-    
+
     private _model: mongoose.Model<any>;
 
     /**
@@ -19,27 +20,37 @@ export default class MongooseRepository<T extends IModel> implements IRepository
         return this._model;
     }
 
-    public create(item: T, callback?: (error: any, result: T) => void): Promise<T> {
+    public async create(item: T, callback?: (error: any, result: T) => void): Promise<T> {
         return this._model.create(item, callback);
     }
 
-    public retrieve(callback?: (error: any, result: T[]) => void): Promise<T[]> {
-        return this._model.find(callback).exec();
+    public async createMany(items: T[], callback?: (error: any, result: any) => void): Promise<T[]> {
+        return this._model.insertMany(items, callback);
     }
 
-    public update(id: string, item: T, callback?: (error: any, result: T) => void): Promise<T> {
+    public async retrieve(contition?: any, callback?: (error: any, result: T[]) => void): Promise<T[]> {
+        return this._model.find(contition, callback).exec();
+    }
+
+    public async retrieveMany(limit: number, page: number, callback?: (error: any, result: T[]) => void): Promise<T[]> {
+        limit = Math.abs(limit || 50);
+        page = Math.abs(page || 0);
+        return this._model.find(callback).limit(limit).skip(limit * page).exec();
+    }
+
+    public async update(id: string, item: T, callback?: (error: any, result: T) => void): Promise<T> {
         return this._model.update({ _id: id }, item, callback).exec();
     }
 
-    public delete(id: string, callback?: (error: any)  => void): Promise<void> {
+    public async delete(id: string, callback?: (error: any) => void): Promise<void> {
         return this._model.remove({ _id: this.toObjectId(id) }, callback).exec();
     }
 
-    public findById(id: string, callback?: (error: any, result: T) => void): Promise<T> {
+    public async findById(id: string, callback?: (error: any, result: T) => void): Promise<T> {
         return this._model.findById(this.toObjectId(id), callback).exec();
     }
 
-    public findOne(condition: any, callback?: (error: any, result: T) => void): Promise<T> {
+    public async findOne(condition: any, callback?: (error: any, result: T) => void): Promise<T> {
         return this._model.findOne(condition, callback).exec();
     }
 

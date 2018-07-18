@@ -8,11 +8,13 @@ import IRepository from './app/repository/interfaces/IRepository';
 import ITimeTriggerModel from './app/model/interfaces/ITimeTriggerModel';
 import { injectable, inject } from 'inversify';
 import { EventEmitter } from 'events';
+import { IFunctionActionModel } from './app/model/interfaces/IFunctionActionModel';
 
 export enum jobEvents {
     started = 'runned',
     finnidhed = 'finnidhed',
     error = 'error',
+    info = 'info',
 }
 @injectable()
 export default class TaskRunner implements IProcess {
@@ -53,7 +55,7 @@ export default class TaskRunner implements IProcess {
                 tasks.forEach(task => {
                     const job = schedule.scheduledJobs[task.name];
                     if (job) {
-                        job.reschedule(task.action);
+                        job.reschedule((<ITimeTriggerModel>task.trigger).recurrence);
                     } else {
                         this.scheduleTask(task);
                     }
@@ -68,23 +70,29 @@ export default class TaskRunner implements IProcess {
     }
 
     private scheduleTask(task: ITaskModel) {
+        const action: IFunctionActionModel = <IFunctionActionModel>task.action;
+        // tslint:disable-next-line:no-eval
+        const functionToBeExecuted = eval(action.source)[action.functionName].bind(null, task);
+        
         const job = schedule.scheduleJob(task.name, (<ITimeTriggerModel>task.trigger).recurrence,
             () => {
                 try {
+                    
                     job.emit(jobEvents.started, task);
-                    this[task.action].bind(null, task).call();
+                    functionToBeExecuted.call(action.parameters);
                     job.emit(jobEvents.finnidhed, task);
                 } catch (error) {
-                    job.emit(jobEvents.error, error);
+                    job.emit(jobEvents.error, error.message);
                 }
             },
         ).on(jobEvents.finnidhed, (item) => {
-            logger.debug('Job next execution: ', job.name, job.nextInvocation());
-            logger.info('Job executed', item);
-        }).on(jobEvents.error, (item) => {
-            logger.error('Job error', item);
+            logger.info('Job executed', job.name, job.nextInvocation());
+        }).on(jobEvents.error, (error) => {
+            logger.error('Job error', error);
         }).on(jobEvents.started, (item) => {
             logger.debug('Job started', item);
+        }).on(jobEvents.info, (item) => {
+        logger.debug('Job info', item);
         });
         logger.debug('Job next execution: ', job.name, job.nextInvocation());
         this.jobs.push(task._id);

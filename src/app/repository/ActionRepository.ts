@@ -1,14 +1,12 @@
-import model from '../dataAccess/schemas/ZoneSchema';
+import model from '../dataAccess/schemas/ActionSchema';
 import MongooseRepository from './base/MongooseRepository';
-import IZoneModel from '../model/interfaces/IZoneModel';
 import { sealed } from '../../core/decorators/Sealed';
 import { injectable } from 'inversify';
-
+import IActionModel from '../model/interfaces/IActionModel';
 @sealed
 @injectable()
-export default class ZoneRepository extends MongooseRepository<IZoneModel> {
+export default class ActionRepository extends MongooseRepository<IActionModel> {
     constructor() {
         super(model);
-   }
+    }
 }
-
