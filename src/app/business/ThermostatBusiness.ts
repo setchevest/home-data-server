@@ -131,7 +131,7 @@ export default class ThermostatBusiness extends BaseBusiness<IThermostatModel> i
     private saveArduinoData(response: IThermostatResponse): IThermostatResponse {
         if (response.zones) {
             response.zones.forEach(aZone => {
-                this.zoneBusiness.findOne({ internalId: <number>aZone.id }, (error, zone) => {
+                this.zoneBusiness.findOne({ internalId: <number>aZone.id }).then(zone => {
                     if (zone) {
                         this.tempBusiness.create(<ITemperatureSensorDataModel>{
                             zone: zone._id,

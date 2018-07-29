@@ -8,9 +8,9 @@ import ZoneRepository from '../../app/repository/ZoneRepository';
 import logger from '../../core/Logger';
 import FunctionActionRepository from '../../app/repository/FunctionActionRepository';
 import { IFunctionActionModel } from '../../app/model/interfaces/IFunctionActionModel';
-import ITriggerModel from '../../app/model/interfaces/ITriggerModel';
 import ITimeTriggerModel from '../../app/model/interfaces/ITimeTriggerModel';
 import TimeTriggerRepository from '../../app/repository/TimeTriggerRepository';
+import IQueryOptions from '../../app/repository/interfaces/base/IQueryOptions';
 
 export class InitializeOptions<T> {
     constructor(private fileName: string, private repo: IRepository<T>) {
@@ -18,8 +18,7 @@ export class InitializeOptions<T> {
     }
 
     public initialize(root: string) {
-        const self = this;
-        this.repo.retrieveMany(1, 0).then(items => {
+        this.repo.retrieve(<IQueryOptions>{limit: 1, page: 0}).then(items => {
             if (items.length === 0) {
                 const file = path.resolve(path.join(root, this.fileName));
                 logger.info('Initializing data: ', file);

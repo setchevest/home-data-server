@@ -3,6 +3,7 @@ import IModel from '../../model/interfaces/IModel';
 import IRepository from '../../repository/interfaces/IRepository';
 import { injectable } from 'inversify';
 import autobind from '../../../../node_modules/autobind-decorator';
+import IQueryOptions from '../../repository/interfaces/base/IQueryOptions';
 
 @injectable()
 @autobind
@@ -14,28 +15,24 @@ export default abstract class BaseBusiness<T extends IModel> implements IBaseBus
         this.repository = repository;
     }
 
-    public async create(item: T, callback?: (error: any, result: T) => void): Promise<T> {
-        return this.repository.create(item, callback);
+    public async create(item: T): Promise<T> {
+        return this.repository.create(item);
     }
 
-    public async createMany(items: Array<T>, callback?: (error: any, result: T) => void): Promise<Array<T>> {
-        return this.repository.createMany(items, callback);
+    public async createMany(items: Array<T>): Promise<Array<T>> {
+        return this.repository.createMany(items);
     }
 
-    public async retrieve(contition?: any, callback?: (error: any, result: T[]) => void): Promise<T[]> {
-        return this.repository.retrieve(contition, callback);
+    public async retrieve(options: IQueryOptions): Promise<T[]> {
+        return this.repository.retrieve(options);
     }
 
-    public async retrieveMany(limit: number, page: number, callback?: (error: any, result: T[]) => void): Promise<T[]> {
-        return this.repository.retrieveMany(limit, page, callback);
-    }
-
-    public async update(id: string, item: T, callback?: (error: any, result: T) => void): Promise<T> {
+    public async update(id: string, item: T): Promise<T> {
         const repo = this.repository;
         return new Promise<T>(function (resolve, reject) {
-            repo.findById(id, callback)
+            repo.findById(id)
                 .then(function (res) {
-                    repo.update(res._id, item, callback)
+                    repo.update(res._id, item)
                         .then(resolve)
                         .catch(reject);
                 }).catch(reject);
@@ -43,14 +40,14 @@ export default abstract class BaseBusiness<T extends IModel> implements IBaseBus
     }
 
     public async delete(id: string, callback?: (error: any) => void): Promise<void> {
-        return this.repository.delete(id, callback);
+        return this.repository.delete(id);
     }
 
-    public async findById(id: string, callback?: (error: any, result: T) => void): Promise<T> {
-        return this.repository.findById(id, callback);
+    public async findById(id: string): Promise<T> {
+        return this.repository.findById(id);
     }
 
-    public async findOne(condition: any, callback?: (error: any, result: T) => void): Promise<T> {
-        return this.repository.findOne(condition, callback);
+    public async findOne(condition: any): Promise<T> {
+        return this.repository.findOne(condition);
     }
 }

@@ -41,6 +41,7 @@ export default class WebServer implements IProcess {
     /*--------  Constructor  --------*/
 
     constructor(@inject('IAppConfig') private appConfig: IAppConfig) {
+        
         // Start App
         this.port = this.normalizePort(this.appConfig.PORT);
         this.server = new InversifyExpressServer(container);
@@ -48,9 +49,11 @@ export default class WebServer implements IProcess {
             .setConfig(app => {
                 app.use(function (req, res, next) {
                     res.header('Access-Control-Allow-Origin', '*');
+                    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
                     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
                     next();
                 });
+
                 this.setViewEngine(app);
                 // Middleware
                 this.setMiddleware(app);
@@ -61,9 +64,22 @@ export default class WebServer implements IProcess {
             }).setErrorConfig(app =>
                 app.use((err, req, res, next) => {
                     logger.error('Web server error', err.message || err);
-                    res.status(500).send({error: 'Internal server error. Please contact your administrator.'});
+                    res.status(500).send({ error: 'Internal server error. Please contact your administrator.', errorDetails: err.message || err });
                 })).build();
     }
+
+    // private configureNodeRed(app: express.Application) {
+    //     const node_red_settings = {
+    //         httpAdminRoot: '/red',
+    //         httpNodeRoot: '/redapi',
+    //         // userDir: '/home/nol/.nodered/',
+    //         functionGlobalContext: { },    // enables global context
+    //     };
+    //     RED.init(app, node_red_settings);
+    //     app.use(node_red_settings.httpAdminRoot, RED.httpAdmin);
+    //     // Serve the http nodes UI from /api
+    //     app.use(node_red_settings.httpNodeRoot, RED.httpNode);
+    // }
 
     @autobind
     public start(events: EventEmitter): Promise<boolean> {
@@ -110,17 +126,17 @@ export default class WebServer implements IProcess {
             ],
             winstonInstance: logger,
             meta: false, // optional: control whether you want to log the meta data about the request (default to true)
-            msg: 'HTTP {{req.method}} {{req.url}}', 
-                            // optional: customize the default logging message. 
-                            // E.g. "{{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}"
-            expressFormat: true, 
-                            // Use the default Express/morgan request formatting. 
-                            // Enabling this will override any msg if true. 
-                            // Will only output colors with colorize set to true
+            msg: 'HTTP {{req.method}} {{req.url}}',
+            // optional: customize the default logging message. 
+            // E.g. "{{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}"
+            expressFormat: true,
+            // Use the default Express/morgan request formatting. 
+            // Enabling this will override any msg if true. 
+            // Will only output colors with colorize set to true
             colorize: true, // Color the text and status code, using the Express/morgan 
-                            // color palette (text: gray, status: default green, 3XX, 4XX yellow, 5XX red).
-            ignoreRoute: function (req, res) { return false; }, 
-                            // optional: allows to skip some log messages based on request and/or response
+            // color palette (text: gray, status: default green, 3XX, 4XX yellow, 5XX red).
+            ignoreRoute: function (req, res) { return false; },
+            // optional: allows to skip some log messages based on request and/or response
         }));
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({ extended: false }));
@@ -185,7 +201,7 @@ export default class WebServer implements IProcess {
         const bind = (typeof addr === 'string') ? `pipe ${addr}` : `port ${addr.port}`;
         logger.debug(`Listening on ${bind}`);
     }
-    
+
     @autobind
     private onClose(server: http.Server): void {
         const addr = this.httpServer.address();

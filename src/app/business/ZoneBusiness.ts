@@ -11,16 +11,16 @@ export default class ZoneBusiness extends BaseBusiness<IZoneModel> {
         super(repository);
     }
 
-    public findByInternalId(internalId: number, callback: (error: any, result: IZoneModel) => void): Promise<IZoneModel> {
-        return this.repository.findOne({ internalId: internalId }, callback);
+    public findByInternalId(internalId: number): Promise<IZoneModel> {
+        return this.repository.findOne({ internalId: internalId });
     }
 
-    public create(item: IZoneModel, callback?: (error: any, result: any) => void): Promise<IZoneModel> {
+    public create(item: IZoneModel): Promise<IZoneModel> {
         const repo = this.repository;
         return new Promise<IZoneModel>((resolve, reject) => {
-            this.repository.findOne({ internalId: item.internalId }, function (err, zone) {
+            this.repository.findOne({ internalId: item.internalId }).then( zone => {
                 if (!zone) {
-                    repo.create(item, callback).then(resolve).catch(reject);
+                    repo.create(item).then(resolve).catch(reject);
                 } else {
                     resolve(zone);
                 }

@@ -5,6 +5,8 @@ import logger from '../../core/Logger';
 import IBaseController from '../interfaces/IBaseController';
 import { httpGet, httpPost, httpPut, httpDelete, request, response } from 'inversify-express-utils';
 import { injectable } from 'inversify';
+import * as qm from 'query-to-mongo';
+import IQueryOptions from '../../app/repository/interfaces/base/IQueryOptions';
 
 @autobind
 @injectable()
@@ -41,19 +43,14 @@ export default class BaseController<T> implements IBaseController<T> {
 
     @httpGet('/')
     public retrieve(@request() req: express.Request, @response() res: express.Response): any {
-        return this.processRequest(this.business.retrieve(req.body));
-    }
-
-    @httpGet('/where:condition')
-    public retrieveWhere(@request() req: express.Request, @response() res: express.Response): any {
-        return this.processRequest(this.business.retrieve(JSON.parse(decodeURIComponent(req.params.condition))));
-    }
-
-    @httpGet('/page:page/:limit?')
-    public retrieveMany(@request() req: express.Request, @response() res: express.Response): any {
-        const page: number = req.params.page;
-        const limit: number = req.params.limit;
-        return this.processRequest(this.business.retrieveMany(limit, page - 1));
+        const query = qm(req.query);
+        const options = <IQueryOptions>{
+            condition: query.criteria,
+            limit: query.options.limit, 
+            page: query.options.skip,
+            sort: query.options.sort,
+        };
+        return this.processRequest(this.business.retrieve(options));
     }
 
     @httpGet('/byid/:_id')
@@ -80,7 +77,12 @@ export default class BaseController<T> implements IBaseController<T> {
     }
 
     protected createSuccessResponse(data: any): any {
-        return { status: 'success', data: data };
+        return { 
+            status: 'success',
+            dataTotalCount: data instanceof Array ? data.length : 1,
+            dataLength: data instanceof Array ? data.length : 1,
+            data: data,
+        };
     }
 
 }

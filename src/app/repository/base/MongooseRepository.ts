@@ -2,7 +2,7 @@ import * as mongoose from 'mongoose';
 import IRepository from '../interfaces/IRepository';
 import { injectable, unmanaged } from 'inversify';
 import IModel from '../../model/interfaces/IModel';
-import logger from '../../../core/Logger';
+import IQueryOptions from '../interfaces/base/IQueryOptions';
 
 @injectable()
 export default class MongooseRepository<T extends IModel> implements IRepository<T> {
@@ -20,38 +20,36 @@ export default class MongooseRepository<T extends IModel> implements IRepository
         return this._model;
     }
 
-    public async create(item: T, callback?: (error: any, result: T) => void): Promise<T> {
-        return this._model.create(item, callback);
+    public async create(item: T): Promise<T> {
+        return this._model.create(item);
     }
 
-    public async createMany(items: T[], callback?: (error: any, result: any) => void): Promise<T[]> {
-        return this._model.insertMany(items, callback);
+    public async createMany(items: T[]): Promise<T[]> {
+        return this._model.insertMany(items);
     }
 
-    public async retrieve(contition?: any, callback?: (error: any, result: T[]) => void): Promise<T[]> {
-        return this._model.find(contition, callback).exec();
+    public async retrieve(options: IQueryOptions): Promise<T[]> {
+        options = options || <IQueryOptions>{};
+        options.limit = Math.abs(options.limit || 50);
+        options.page = Math.abs(options.page || 0);
+        options.sort = options.sort || {};
+        return this._model.find(options.condition).limit(options.limit).skip(options.limit * options.page).sort(options.sort).exec();
     }
 
-    public async retrieveMany(limit: number, page: number, callback?: (error: any, result: T[]) => void): Promise<T[]> {
-        limit = Math.abs(limit || 50);
-        page = Math.abs(page || 0);
-        return this._model.find(callback).limit(limit).skip(limit * page).exec();
+    public async update(id: string, item: T): Promise<T> {
+        return this._model.update({ _id: id }, item).exec();
     }
 
-    public async update(id: string, item: T, callback?: (error: any, result: T) => void): Promise<T> {
-        return this._model.update({ _id: id }, item, callback).exec();
+    public async delete(id: string): Promise<void> {
+        return this._model.remove({ _id: this.toObjectId(id) }).exec();
     }
 
-    public async delete(id: string, callback?: (error: any) => void): Promise<void> {
-        return this._model.remove({ _id: this.toObjectId(id) }, callback).exec();
+    public async findById(id: string): Promise<T> {
+        return this._model.findById(this.toObjectId(id)).exec();
     }
 
-    public async findById(id: string, callback?: (error: any, result: T) => void): Promise<T> {
-        return this._model.findById(this.toObjectId(id), callback).exec();
-    }
-
-    public async findOne(condition: any, callback?: (error: any, result: T) => void): Promise<T> {
-        return this._model.findOne(condition, callback).exec();
+    public async findOne(condition: any): Promise<T> {
+        return this._model.findOne(condition).exec();
     }
 
     protected toObjectId(id: string): mongoose.Types.ObjectId {
