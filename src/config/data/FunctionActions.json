@@ -1,10 +1,12 @@
 [
     {
+        "_id":"5b5d699a620c410013a9e001",
         "name": "Thermostat Off",
         "source": "this",
         "functionName": "thermostatOff"
     },
     {
+        "_id":"5b5d699a620c410013a9e002",
         "name": "Thermostat On",
         "source": "this",
         "functionName": "thermostatOn"

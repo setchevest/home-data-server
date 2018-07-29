@@ -1,13 +1,16 @@
 [
     {
+        "_id":"5b5d699a620c410013a9e013",
         "internalId": 1,
         "name": "Cocina"
     },
     {
+        "_id":"5b5d699a620c410013a9e014",
         "internalId": 2,
         "name": "Baño"
     },
     {
+        "_id":"5b5d699a620c410013a9e015",
         "internalId": 3,
         "name": "Estudio"
     }

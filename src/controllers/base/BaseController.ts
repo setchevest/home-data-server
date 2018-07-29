@@ -7,6 +7,7 @@ import { httpGet, httpPost, httpPut, httpDelete, request, response } from 'inver
 import { injectable } from 'inversify';
 import * as qm from 'query-to-mongo';
 import IQueryOptions from '../../app/repository/interfaces/base/IQueryOptions';
+import { NumericDictionary } from '../../../node_modules/@types/lodash';
 
 @autobind
 @injectable()
@@ -76,10 +77,10 @@ export default class BaseController<T> implements IBaseController<T> {
         return { status: 'error', error: 'An error has occured', errorMessage: error.message, errorDetails: error.stack };
     }
 
-    protected createSuccessResponse(data: any): any {
+    protected createSuccessResponse(data: any, totalLength?: number): any {
         return { 
             status: 'success',
-            dataTotalCount: data instanceof Array ? data.length : 1,
+            dataTotalLength: totalLength,
             dataLength: data instanceof Array ? data.length : 1,
             data: data,
         };

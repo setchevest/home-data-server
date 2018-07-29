@@ -1,15 +1,15 @@
 [{
-        "_id": null,
+        "_id":"5b5d699a620c410013a9e001",
         "enabled": true,
         "name": "Turn Off Heater",
-        "action": "5b4e460236d9efdffb4647d8",
-        "trigger": "5b4e46edd20806e0ff62485e"
+        "action": "5b5d699a620c410013a9e001",
+        "trigger": "5b5d699a620c410013a9e001"
     },
     {
-        "_id": null,
+        "_id":"5b5d699a620c410013a9e002",
         "enabled": true,
         "name": "Turn On Heater",
-        "action": "5b4e460236d9efdffb4647d9",
-        "trigger": "5b4e46edd20806e0ff62485f"
+        "action": "5b5d699a620c410013a9e002",
+        "trigger": "5b5d699a620c410013a9e002"
     }
 ]
