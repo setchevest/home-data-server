@@ -1,5 +1,5 @@
 import BaseController from './base/BaseController';
-import { controller } from 'inversify-express-utils';
+import { controller} from 'inversify-express-utils';
 import IBaseBusiness from '../app/business/interfaces/base/IBaseBusiness';
 import { inject } from 'inversify';
 import ITaskModel from '../app/model/interfaces/ITaskModel';

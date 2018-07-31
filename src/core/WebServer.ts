@@ -3,26 +3,25 @@ import * as cookieParser from 'cookie-parser';
 import * as express from 'express';
 import * as path from 'path';
 import * as http from 'http';
-import IAppConfig from './config/IAppConfig';
-import IProcess from './core/IProcess';
+import IAppConfig from '../config/IAppConfig';
+import IProcess from './intefaces/IProcess';
 import autobind from 'autobind-decorator';
-import logger from './core/Logger';
+import logger from './Logger';
 import * as winston from 'winston';
 import * as expressWinston from 'express-winston';
 import { InversifyExpressServer } from 'inversify-express-utils';
-import container from './config/inversify.config';
-import './controllers/TemperatureSensorDataController';
-import './controllers/ZoneController';
-import './controllers/ThermostatController';
-import './controllers/TaskController';
-import './controllers/TimeTriggerController';
-import './controllers/FunctionActionController';
+import container from '../config/inversify.config';
+import '../controllers/TemperatureSensorDataController';
+import '../controllers/ZoneController';
+import '../controllers/ThermostatController';
+import '../controllers/TaskController';
+import '../controllers/TimeTriggerController';
+import '../controllers/FunctionActionController';
 import { injectable, inject } from 'inversify';
-import { EventEmitter } from 'events';
-
 
 @injectable()
 export default class WebServer implements IProcess {
+    
 
     get identifier(): string | Symbol {
         return 'WebServer';
@@ -47,12 +46,7 @@ export default class WebServer implements IProcess {
         this.server = new InversifyExpressServer(container);
         this.app = this.server
             .setConfig(app => {
-                app.use(function (req, res, next) {
-                    res.header('Access-Control-Allow-Origin', '*');
-                    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-                    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-                    next();
-                });
+                app.use(this.setCorsAndVerbs);
 
                 this.setViewEngine(app);
                 // Middleware
@@ -66,6 +60,13 @@ export default class WebServer implements IProcess {
                     logger.error('Web server error', err.message || err);
                     res.status(500).send({ error: 'Internal server error. Please contact your administrator.', errorDetails: err.message || err });
                 })).build();
+    }
+
+    private setCorsAndVerbs(req, res, next) {
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+            res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+            next();
     }
 
     // private configureNodeRed(app: express.Application) {
@@ -82,7 +83,7 @@ export default class WebServer implements IProcess {
     // }
 
     @autobind
-    public start(events: EventEmitter): Promise<boolean> {
+    public start(): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             this.httpServer = this.app.listen(this.port, () => {
                 resolve(true);
@@ -126,7 +127,7 @@ export default class WebServer implements IProcess {
             ],
             winstonInstance: logger,
             meta: false, // optional: control whether you want to log the meta data about the request (default to true)
-            msg: 'HTTP {{req.method}} {{req.url}}',
+            msg: 'HTTP {{req.method}} {{res.statusCode}} {{req.url}}',
             // optional: customize the default logging message. 
             // E.g. "{{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}"
             expressFormat: true,

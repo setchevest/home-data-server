@@ -1,14 +1,8 @@
+import { ILogger } from './intefaces/ILogger';
+
 import * as winston from 'winston';
 import IAppConfig from '../config/AppConfig';
 
-
-export interface ILogger {
-    error(message, ...data: any[]): void;
-    info(message, ...data: any[]): void;
-    debug(message, ...data: any[]): void;
-    warning(message, ...data: any[]): void;
-    critical(message, ...data: any[]): void;
-}
 
 class Logger implements ILogger {
 

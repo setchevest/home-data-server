@@ -15,9 +15,9 @@ import TemperatureSensorDataBusiness from '../app/business/TemperatureSensorData
 import ZoneBusiness from '../app/business/ZoneBusiness';
 import ITaskModel from '../app/model/interfaces/ITaskModel';
 import TaskRepository from '../app/repository/TaskRepository';
-import IProcess from '../core/IProcess';
-import TaskRunner from '../TaskRunner';
-import WebServer from '../WebServer';
+import IProcess from '../core/intefaces/IProcess';
+import TaskRunner from '../core/TaskRunner';
+import WebServer from '../core/WebServer';
 import IAppConfig from './IAppConfig';
 import {AppConfig} from './AppConfig';
 import TaskBusiness from '../app/business/TaskBusiness';
@@ -27,6 +27,9 @@ import { IFunctionActionModel } from '../app/model/interfaces/IFunctionActionMod
 import FunctionActionBusiness from '../app/business/FunctionActionBusiness';
 import TimeTriggerRepository from '../app/repository/TimeTriggerRepository';
 import FunctionActionRepository from '../app/repository/FunctionActionRepository';
+import ProcessManager from '../core/ProcessManager';
+import { IMessageBroker } from '../core/intefaces/IMessageBroker';
+import { IProcessManager } from '../core/intefaces/IProcessManager';
 
 const container = new Container(
     {
@@ -51,7 +54,8 @@ container.bind<IBaseBusiness<IThermostatModel>>('IBaseBusiness<IThermostatModel>
 container.bind<IBaseBusiness<ITaskModel>>('IBaseBusiness<ITaskModel>').to(TaskBusiness);
 container.bind<ThermostatBusiness>('ThermostatBusiness').to(ThermostatBusiness);
 
-
+container.bind<IProcessManager>('IProcessManager').to(ProcessManager).inSingletonScope();
+container.bind<IMessageBroker>('IMessageBroker').to(ProcessManager).inSingletonScope();
 container.bind<IProcess>('IProcess').to(TaskRunner).inSingletonScope();
 container.bind<IProcess>('IProcess').to(WebServer).inSingletonScope();
 

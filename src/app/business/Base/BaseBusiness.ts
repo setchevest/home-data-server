@@ -2,7 +2,7 @@ import IBaseBusiness from '../interfaces/base/IBaseBusiness';
 import IModel from '../../model/interfaces/IModel';
 import IRepository from '../../repository/interfaces/IRepository';
 import { injectable } from 'inversify';
-import autobind from '../../../../node_modules/autobind-decorator';
+import autobind from 'autobind-decorator';
 import IQueryOptions from '../../repository/interfaces/base/IQueryOptions';
 
 @injectable()

@@ -2,9 +2,9 @@ import 'reflect-metadata';
 import { cleanUpMetadata } from 'inversify-express-utils';
 cleanUpMetadata();
 import container from './config/inversify.config';
-import ProcessManager from './core/ProcessManager';
-import IProcess from './core/IProcess';
+import IProcess from './core/intefaces/IProcess';
 import DataInitializer from './config/data/DataInitializer';
+import { IProcessManager } from './core/intefaces/IProcessManager';
 
 // cluster.on("fork", worker => {
 //     logger.debug("Worker Id: ", worker.id);
@@ -15,7 +15,7 @@ import DataInitializer from './config/data/DataInitializer';
 const initializer: DataInitializer = new DataInitializer();
 initializer.initializeData();
 
-const manager: ProcessManager = new ProcessManager();
+const manager: IProcessManager = container.get<IProcessManager>('IProcessManager');
 container.getAll<IProcess>('IProcess').forEach(process => {
     manager.add(process);
 });

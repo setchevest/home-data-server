@@ -1,4 +1,4 @@
-import * as express from 'express';
+import {Request, Response} from 'express';
 import IBaseBusiness from '../../app/business/interfaces/base/IBaseBusiness';
 import autobind from 'autobind-decorator';
 import logger from '../../core/Logger';
@@ -7,7 +7,6 @@ import { httpGet, httpPost, httpPut, httpDelete, request, response } from 'inver
 import { injectable } from 'inversify';
 import * as qm from 'query-to-mongo';
 import IQueryOptions from '../../app/repository/interfaces/base/IQueryOptions';
-import { NumericDictionary } from '../../../node_modules/@types/lodash';
 
 @autobind
 @injectable()
@@ -23,13 +22,13 @@ export default class BaseController<T> implements IBaseController<T> {
     }
 
     @httpPost('/')
-    public create(@request() req: express.Request, @response() res: express.Response): any {
+    public create(@request() req: Request, @response() res: Response): Promise<any> {
         const entity: T = <T>req.body;
         return this.processRequest(this.business.create(entity));
     }
 
     @httpPut('/:_id')
-    public update(@request() req: express.Request, @response() res: express.Response): any {
+    public update(@request() req: Request, @response() res: Response): Promise<any> {
 
         const entity: T = <T>req.body;
         const _id: string = req.params._id;
@@ -37,13 +36,13 @@ export default class BaseController<T> implements IBaseController<T> {
     }
 
     @httpDelete('/:_id')
-    public delete(@request() req: express.Request, @response() res: express.Response): any {
+    public delete(@request() req: Request, @response() res: Response): Promise<any> {
         const _id: string = req.params._id;
         return this.processRequest(this.business.delete(_id));
     }
 
     @httpGet('/')
-    public retrieve(@request() req: express.Request, @response() res: express.Response): any {
+    public retrieve(@request() req: Request, @response() res: Response): Promise<any> {
         const query = qm(req.query);
         const options = <IQueryOptions>{
             condition: query.criteria,
@@ -55,7 +54,7 @@ export default class BaseController<T> implements IBaseController<T> {
     }
 
     @httpGet('/byid/:_id')
-    public findById(@request() req: express.Request, @response() res: express.Response): any {
+    public findById(@request() req: Request, @response() res: Response): Promise<any> {
 
         const _id: string = req.params._id;
         return this.processRequest(this.business.findById(_id));
