@@ -67,8 +67,7 @@ export default class ThermostatBusiness extends BaseBusiness<IThermostatModel> i
             this.thermostatDevice.setPower(power)
             .then(this.saveArduinoData)
             .then(thermostatResponse => {
-                this.create(<IThermostatModel>{ 
-                    _id: null,
+                this.create(<IThermostatModel>{
                     isOn: thermostatResponse.heater.status === 'ON', 
                     mode: ThermostatMode.Manual.toString() })
                     .then(function (saveResult) {

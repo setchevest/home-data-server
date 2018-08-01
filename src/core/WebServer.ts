@@ -155,7 +155,7 @@ export default class WebServer implements IProcess {
         const staticFolferPath = path.join(__dirname, '../public');
         app.use(express.static(staticFolferPath, { redirect: true }));
         exists(staticFolferPath, (value) => {
-            if (value) {
+            if (!value) {
                 logger.warning(`Static Folder path "${staticFolferPath}" doesn't exists.`);
             }
         });
