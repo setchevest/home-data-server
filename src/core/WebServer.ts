@@ -18,6 +18,7 @@ import '../controllers/TaskController';
 import '../controllers/TimeTriggerController';
 import '../controllers/FunctionActionController';
 import { injectable, inject } from 'inversify';
+import { exists } from 'fs';
 
 @injectable()
 export default class WebServer implements IProcess {
@@ -127,10 +128,10 @@ export default class WebServer implements IProcess {
             ],
             winstonInstance: logger,
             meta: false, // optional: control whether you want to log the meta data about the request (default to true)
-            msg: 'HTTP {{req.method}} {{res.statusCode}} {{req.url}}',
+            msg: 'HTTP {{req.method}} {{req.url}} {{res.statusCode}} - {{res.responseTime}}ms',
             // optional: customize the default logging message. 
             // E.g. "{{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}"
-            expressFormat: true,
+            expressFormat: false,
             // Use the default Express/morgan request formatting. 
             // Enabling this will override any msg if true. 
             // Will only output colors with colorize set to true
@@ -151,8 +152,13 @@ export default class WebServer implements IProcess {
      */
     private setStaticFiles(app: express.Application) {
         // Set static route for public folder
-        const staticFolferPath = path.join(__dirname, '/public');
-        app.use(express.static(staticFolferPath, { redirect: false }));
+        const staticFolferPath = path.join(__dirname, '../public');
+        app.use(express.static(staticFolferPath, { redirect: true }));
+        exists(staticFolferPath, (value) => {
+            if (value) {
+                logger.warning(`Static Folder path "${staticFolferPath}" doesn't exists.`);
+            }
+        });
     }
 
     /**
