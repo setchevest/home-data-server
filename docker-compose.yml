@@ -13,7 +13,6 @@ services:
     environment:
       - MONGO_URI=mongodb://mongo:27017/home
       - PORT=8080
-      - THERMOSTAT_URL=http://192.168.0.4
       - TZ=America/Argentina/Buenos_Aires
   db:
     container_name: mongo

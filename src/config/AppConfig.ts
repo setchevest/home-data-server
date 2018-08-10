@@ -8,7 +8,6 @@ export class AppConfig implements IAppConfig {
 
     public readonly MONGO_URI: string;
     public readonly PORT: number;
-    public readonly THERMOSTAT_URL: string;
     public readonly LOG_LEVEL: string;
     public readonly UPDATE_INTERVAL: number;
 
@@ -16,7 +15,6 @@ export class AppConfig implements IAppConfig {
         this.setEnv();
         this.MONGO_URI = process.env.MONGO_URI;
         this.PORT = process.env.PORT ? Number.parseInt(process.env.PORT) : 8080;
-        this.THERMOSTAT_URL = process.env.THERMOSTAT_URL;
         this.LOG_LEVEL = 'debug';
         this.UPDATE_INTERVAL = 60;
     }
