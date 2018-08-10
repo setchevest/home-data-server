@@ -19,6 +19,13 @@ export class DeviceSchema extends Schema {
             name: {
                 type: String,
                 required: true,
+                index: true,
+                unique: true,
+            },
+            enabled: { type: Boolean, required: true },
+            config: {
+                type: Map,
+                required: true,
             },
         },
             {

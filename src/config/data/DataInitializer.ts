@@ -11,6 +11,8 @@ import { IFunctionActionModel } from '../../app/model/interfaces/IFunctionAction
 import ITimeTriggerModel from '../../app/model/interfaces/ITimeTriggerModel';
 import TimeTriggerRepository from '../../app/repository/TimeTriggerRepository';
 import IQueryOptions from '../../app/repository/interfaces/base/IQueryOptions';
+import DeviceRepository from '../../app/repository/DeviceRepository';
+import IDeviceModel from '../../app/model/interfaces/IDeviceModel';
 
 export class InitializeOptions<T> {
     constructor(private fileName: string, private repo: IRepository<T>) {
@@ -48,6 +50,7 @@ export default class DataInitializer {
         this.initializablefiles.push(new InitializeOptions<ITimeTriggerModel>('TimeTriggers.json', new TimeTriggerRepository()));
         this.initializablefiles.push(new InitializeOptions<ITaskModel>('Tasks.json', new TaskRepository()));
         this.initializablefiles.push(new InitializeOptions<IZoneModel>('Zones.json', new ZoneRepository()));
+        this.initializablefiles.push(new InitializeOptions<IDeviceModel>('Devices.json', new DeviceRepository()));
     }
 
     public initializeData() {

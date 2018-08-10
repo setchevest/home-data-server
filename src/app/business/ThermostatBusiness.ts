@@ -11,35 +11,40 @@ import IRepository from '../repository/interfaces/IRepository';
 import IBaseBusiness from './interfaces/base/IBaseBusiness';
 import IZoneModel from '../model/interfaces/IZoneModel';
 import autobind from 'autobind-decorator';
-
+import IDeviceFactory from '../devices/interfaces/IDeviceFactory';
+import IDeviceModel from '../model/interfaces/IDeviceModel';
+import ArduinoThermostat from '../devices/ArduinoThermostat';
 
 @sealed
 @injectable()
 export default class ThermostatBusiness extends BaseBusiness<IThermostatModel> implements IThermostatBusiness {
-
-    private thermostatDevice: IThermostatDevice;
-    private tempBusiness: IBaseBusiness<ITemperatureSensorDataModel>;
-    private zoneBusiness: IBaseBusiness<IZoneModel>;
-
+    
     constructor(@inject('IRepository<IThermostatModel>') repository: IRepository<IThermostatModel>,
-        @inject('IThermostatDevice') thermostatDevice: IThermostatDevice,
-        @inject('IBaseBusiness<ITemperatureSensorDataModel>') tempBusiness: IBaseBusiness<ITemperatureSensorDataModel>,
-        @inject('IBaseBusiness<IZoneModel>') zoneBusiness: IBaseBusiness<IZoneModel>) {
+        @inject('IDeviceFactory') private deviceFactory: IDeviceFactory,
+        @inject('IBaseBusiness<IDeviceModel>') private deviceBusiness: IBaseBusiness<IDeviceModel>,
+        @inject('IBaseBusiness<ITemperatureSensorDataModel>') private tempBusiness: IBaseBusiness<ITemperatureSensorDataModel>,
+        @inject('IBaseBusiness<IZoneModel>') private zoneBusiness: IBaseBusiness<IZoneModel>) {
         super(repository);
-        this.thermostatDevice = thermostatDevice;
-        this.tempBusiness = tempBusiness;
-        this.zoneBusiness = zoneBusiness;
     }
 
-    public getConfiguration(callback?: (error: any, result: any) => void): Promise<any> {
-        return this.thermostatDevice.getCurrentConfiguration()
+    private async thermostatDevice(): Promise<IThermostatDevice> {
+        const devices = await this.deviceBusiness.retrieve({ limit: 1, condition: { type: 'Thermostat' } });
+        if (devices.length === 0) {
+            return Promise.resolve(new ArduinoThermostat());
+        } else {
+            return Promise.resolve(<IThermostatDevice>this.deviceFactory.create(devices[0]));
+        }
+    }
+
+    public async getConfiguration(callback?: (error: any, result: any) => void): Promise<any> {
+        return this.thermostatDevice().then( v => v.getCurrentConfiguration()
             .then(item => callback(null, item))
-            .catch(item => callback(item, null));
+            .catch(item => callback(item, null)));
     }
 
-    public getStatus(callback?: (error: any, result: any) => void): Promise<any> {
+    public async getStatus(callback?: (error: any, result: any) => void): Promise<any> {
         return new Promise<any>((resolve, reject) => {
-            this.thermostatDevice.getStatus()
+            this.thermostatDevice().then( v => v.getStatus()
                 .then(thermostatResponse => {
                     const data = {
                         isOn: thermostatResponse.heater.status === 'ON',
@@ -55,16 +60,16 @@ export default class ThermostatBusiness extends BaseBusiness<IThermostatModel> i
                     reject(error);
                     if (callback)
                         callback(error, null);
-                });
+                }));
         });
     }
 
 
     // {"fm":224,"lu":55,"mode":"Manual","heater":{"status":"OFF"},"zones":[{"id":2,"temp":27,"hum":41}]}
-    public setPower(power: boolean, callback?: (error: any, result: any) => void): Promise<any> {
+    public async setPower(power: boolean, callback?: (error: any, result: any) => void): Promise<any> {
 
         return new Promise<any>((resolve, reject) => {
-            this.thermostatDevice.setPower(power)
+            this.thermostatDevice().then( v => v.setPower(power)
             .then(this.saveArduinoData)
             .then(thermostatResponse => {
                 this.create(<IThermostatModel>{
@@ -90,13 +95,13 @@ export default class ThermostatBusiness extends BaseBusiness<IThermostatModel> i
                 reject(error);
                 if (callback)
                     callback(error, null);
-            });
+            }));
         });
     }
 
-    public setMode(mode: ThermostatMode, callback?: (error: any, result: any) => void): Promise<any> {
+    public async setMode(mode: ThermostatMode, callback?: (error: any, result: any) => void): Promise<any> {
         return new Promise<any>((resolve, reject) => {
-            this.thermostatDevice.setMode(mode)
+            this.thermostatDevice().then( v => v.setMode(mode)
             .then(this.saveArduinoData)
             .then(thermostatResponse => {
                 this.create(<IThermostatModel>{ 
@@ -122,7 +127,7 @@ export default class ThermostatBusiness extends BaseBusiness<IThermostatModel> i
                 reject(error);
                 if (callback)
                     callback(error, null);
-            });
+            }));
         });
     }
 

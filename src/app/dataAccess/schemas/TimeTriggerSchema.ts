@@ -17,6 +17,5 @@ export class TimeTriggerSchema extends Schema {
     }
 }
 
-const model: Model<ITimeTriggerMongooseModel> = 
-    <Model<ITimeTriggerMongooseModel>>Trigger.discriminator('Time', new TimeTriggerSchema());
+const model: Model<ITimeTriggerMongooseModel> = Trigger.discriminator<ITimeTriggerMongooseModel>('Time', new TimeTriggerSchema());
 export default model;

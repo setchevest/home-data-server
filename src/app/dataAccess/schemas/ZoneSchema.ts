@@ -15,6 +15,7 @@ export class ZoneSchema extends Schema {
                 type: Number,
                 required: true,
                 index: true,
+                unique: true,
             },
             name: {
                 type: String,

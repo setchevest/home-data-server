@@ -21,6 +21,5 @@ export class FunctionActionSchema extends Schema {
     }
 }
 
-const model: Model<IFunctionActionSchemaMongooseModel> = 
-    <Model<IFunctionActionSchemaMongooseModel>>Action.discriminator('Function', new FunctionActionSchema());
+const model: Model<IFunctionActionSchemaMongooseModel> = Action.discriminator<IFunctionActionSchemaMongooseModel>('Function', new FunctionActionSchema());
 export default model;

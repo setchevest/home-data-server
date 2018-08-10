@@ -12,7 +12,7 @@ export class TaskSchema extends Schema {
     constructor() {
         super({
             name: { type: String, required: true },
-            enabled: { type: String, required: true },
+            enabled: { type: Boolean, required: true },
             action: {
                 type: Schema.Types.ObjectId,
                 ref: 'Action',

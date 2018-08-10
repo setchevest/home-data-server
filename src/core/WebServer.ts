@@ -17,6 +17,9 @@ import '../controllers/ThermostatController';
 import '../controllers/TaskController';
 import '../controllers/TimeTriggerController';
 import '../controllers/FunctionActionController';
+import '../controllers/HttpActionController';
+import '../controllers/ActionController';
+import '../controllers/DeviceController';
 import { injectable, inject } from 'inversify';
 import { exists } from 'fs';
 
