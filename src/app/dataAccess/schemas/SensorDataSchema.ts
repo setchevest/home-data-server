@@ -27,7 +27,7 @@ export class SensorDataSchema extends Schema {
                 timestamps: true,
             });
         
-        this.pre('find', function () {
+        this.pre('findOne', function () {
             this.populate('zone');
         });
     }

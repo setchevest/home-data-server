@@ -33,7 +33,13 @@ export default class MongooseRepository<T extends IModel> implements IRepository
         options.limit = Math.abs(options.limit || 50);
         options.page = Math.abs(options.page || 0);
         options.sort = options.sort || {};
-        return this._model.find(options.condition).limit(options.limit).skip(options.limit * options.page).sort(options.sort).exec();
+        const query = this._model.find(options.condition).limit(options.limit).skip(options.limit * options.page).sort(options.sort);
+        if (options.populate) {
+            options.populate.forEach(element => {
+                query.populate(element);
+            });
+        }
+        return query.exec();
     }
 
     public async update(id: string, item: T): Promise<T> {

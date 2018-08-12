@@ -43,13 +43,15 @@ export default class BaseController<T> implements IBaseController<T> {
 
     @httpGet('/')
     public retrieve(@request() req: Request, @response() res: Response): Promise<any> {
-        const query = qm(req.query);
+        const query = qm(req.query, { ignore: ['populate']});
         const options = <IQueryOptions>{
             condition: query.criteria,
             limit: query.options.limit, 
             page: query.options.skip,
             sort: query.options.sort,
+            populate: req.query.populate ? String(req.query.populate).split(',') : null,
         };
+        
         return this.processRequest(this.business.retrieve(options));
     }
 

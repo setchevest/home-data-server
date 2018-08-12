@@ -45,6 +45,7 @@ import IDeviceBusiness from '../app/business/interfaces/IDeviceBusiness';
 import DeviceRegistry from '../app/devices/DeviceRegistry';
 import IRegistry from '../core/intefaces/IRegistry';
 import IDevice from '../app/devices/interfaces/IDevice';
+import FakeArduinoThermostat from '../app/devices/FakeArduinoThermostat';
 
 const container = new Container(
     {
@@ -55,6 +56,7 @@ const container = new Container(
 container.bind<IAppConfig>('IAppConfig').to(AppConfig).inSingletonScope();
 container.bind<IDeviceFactory>('IDeviceFactory').to(DeviceFactory).inSingletonScope();
 container.bind<IRegistry<String, IDevice>>('IRegistry<String, IDevice>').to(DeviceRegistry).inSingletonScope();
+container.bind<IThermostatDevice>('IThermostatDevice').to(ArduinoThermostat);
 
 container.bind<IRepository<ITemperatureSensorDataModel>>('IRepository<ITemperatureSensorDataModel>').to(TemperatureSensorDataRepository).inRequestScope();
 container.bind<IRepository<IZoneModel>>('IRepository<IZoneModel>').to(ZoneRepository).inRequestScope();

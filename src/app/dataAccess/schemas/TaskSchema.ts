@@ -27,8 +27,8 @@ export class TaskSchema extends Schema {
             {
                 timestamps: true,
             });
-
-        this.pre('find', function () {
+        
+        this.pre('findOne', function () {
             this.populate('action');
             this.populate('trigger');
         });

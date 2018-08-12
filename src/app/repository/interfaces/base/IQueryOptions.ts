@@ -3,4 +3,5 @@ export default interface IQueryOptions {
     sort?: any;
     limit?: number;
     page?: number;
+    populate?: Array<string>;
 }

@@ -4,7 +4,7 @@ import axios, { AxiosPromise } from 'axios';
 import { ThermostatMode } from '../model/interfaces/IThermostatModel';
 import logger from '../../core/Logger';
 import { injectable } from 'inversify';
-import autobind from '../../../node_modules/autobind-decorator';
+import autobind from 'autobind-decorator';
 
 // axios.interceptors.request.use(request => {
 //     console.log('Starting Request', request)

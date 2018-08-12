@@ -12,12 +12,12 @@ export default class DeviceController extends BaseController<IDeviceModel> {
         super(business);
     }
 
-    @httpGet('/data/:name')
+    @httpGet('/:name/data')
     public async getStatus(@request() req: Request): Promise<any> {
         return (<IDeviceBusiness>this.business).getDeviceData(req.params.name, req.query);
     }
 
-    @httpPost('/data/:name')
+    @httpPost('/:name/data')
     public async setData(@request() req: Request): Promise<any> {
         return (<IDeviceBusiness>this.business).setDeviceData(req.params.name, req.body);
     }

@@ -2,8 +2,9 @@ import IDeviceFactory from './interfaces/IDeviceFactory';
 import IDeviceModel from '../model/interfaces/IDeviceModel';
 import IDevice from './interfaces/IDevice';
 import ArduinoThermostat from './ArduinoThermostat';
-import { injectable } from '../../../node_modules/inversify';
-import autobind from '../../../node_modules/autobind-decorator';
+import { injectable } from 'inversify';
+import autobind from 'autobind-decorator';
+import container from '../../config/inversify.config';
 
 @injectable()
 @autobind
@@ -15,7 +16,7 @@ export default class DeviceFactory implements IDeviceFactory {
             if (device) {
                 resolve(device);
             } else {
-                reject('Device could not be created');
+                reject('Device could not be created.');
             }
         });
     }
@@ -27,7 +28,7 @@ export default class DeviceFactory implements IDeviceFactory {
     private createDevice(model: IDeviceModel): IDevice {
         let device: IDevice = null;
         if (model.type === 'Thermostat') {
-            device = new ArduinoThermostat();
+            device = container.get<IDevice>('IThermostatDevice');
         } 
 
         if (device)

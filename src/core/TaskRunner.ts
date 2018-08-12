@@ -50,7 +50,7 @@ export default class TaskRunner implements IProcess {
     @autobind
     private load(): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            this.taskRepo.retrieve({ condition: { enabled: true } }).then(tasks => {
+            this.taskRepo.retrieve({ condition: { enabled: true }, populate: ['trigger', 'action'] }).then(tasks => {
                 tasks.forEach(task => {
                     let job = schedule.scheduledJobs[String(task._id)];
                     if (job) {
@@ -63,7 +63,7 @@ export default class TaskRunner implements IProcess {
                 });
                 resolve(true);
             })
-            .catch(error => logger.error('Retrieving tasks error.', error));
+            .catch(error => logger.error('Retrieving tasks error.', error.message || error));
         });
     }
 
