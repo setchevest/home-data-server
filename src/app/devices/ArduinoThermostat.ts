@@ -4,6 +4,7 @@ import axios, { AxiosPromise } from 'axios';
 import { ThermostatMode } from '../model/interfaces/IThermostatModel';
 import logger from '../../core/Logger';
 import { injectable } from 'inversify';
+import autobind from '../../../node_modules/autobind-decorator';
 
 // axios.interceptors.request.use(request => {
 //     console.log('Starting Request', request)
@@ -17,6 +18,7 @@ import { injectable } from 'inversify';
 
 
 @injectable()
+@autobind
 export default class ArduinoThermostat implements IThermostatDevice {
 
     private config: {
@@ -29,16 +31,17 @@ export default class ArduinoThermostat implements IThermostatDevice {
     constructor() {
 
     }
+
+    public discriminator: 'InputDevice';
+
     get name(): string {
-        return 'Arduino Thermostat';
+        return 'Thermostat';
     }
 
     // {"fm":224,"lu":55,"mode":"Manual","heater":{"status":"OFF"},"zones":[{"id":2,"temp":27,"hum":41}]}
 
     public getCurrentConfiguration(): Promise<IThermostatConfig> {
-        return new Promise<IThermostatConfig>(function (resolve, reject) {
-            resolve(this.config.data);
-        });
+        return Promise.resolve(this.config.data);
     }
 
     public setConfig(config: Map<string, any>): Promise<boolean> {
@@ -61,6 +64,7 @@ export default class ArduinoThermostat implements IThermostatDevice {
         return Promise.resolve();
     }
 
+    
     public getData(data: any): Promise<any> {
         if (data && data.config) {
             return this.getCurrentConfiguration();

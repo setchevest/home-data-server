@@ -3,8 +3,10 @@ import IDeviceModel from '../model/interfaces/IDeviceModel';
 import IDevice from './interfaces/IDevice';
 import ArduinoThermostat from './ArduinoThermostat';
 import { injectable } from '../../../node_modules/inversify';
+import autobind from '../../../node_modules/autobind-decorator';
 
 @injectable()
+@autobind
 export default class DeviceFactory implements IDeviceFactory {
     
     public createAsync(model: IDeviceModel): Promise<IDevice> {

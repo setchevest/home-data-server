@@ -41,6 +41,10 @@ import DeviceRepository from '../app/repository/DeviceRepository';
 import DeviceBusiness from '../app/business/DeviceBusiness';
 import IDeviceFactory from '../app/devices/interfaces/IDeviceFactory';
 import DeviceFactory from '../app/devices/DeviceFactory';
+import IDeviceBusiness from '../app/business/interfaces/IDeviceBusiness';
+import DeviceRegistry from '../app/devices/DeviceRegistry';
+import IRegistry from '../core/intefaces/IRegistry';
+import IDevice from '../app/devices/interfaces/IDevice';
 
 const container = new Container(
     {
@@ -50,6 +54,7 @@ const container = new Container(
 
 container.bind<IAppConfig>('IAppConfig').to(AppConfig).inSingletonScope();
 container.bind<IDeviceFactory>('IDeviceFactory').to(DeviceFactory).inSingletonScope();
+container.bind<IRegistry<String, IDevice>>('IRegistry<String, IDevice>').to(DeviceRegistry).inSingletonScope();
 
 container.bind<IRepository<ITemperatureSensorDataModel>>('IRepository<ITemperatureSensorDataModel>').to(TemperatureSensorDataRepository).inRequestScope();
 container.bind<IRepository<IZoneModel>>('IRepository<IZoneModel>').to(ZoneRepository).inRequestScope();
@@ -67,6 +72,7 @@ container.bind<IBaseBusiness<ITimeTriggerModel>>('IBaseBusiness<ITimeTriggerMode
 container.bind<IBaseBusiness<IThermostatModel>>('IBaseBusiness<IThermostatModel>').to(ThermostatBusiness);
 container.bind<IBaseBusiness<ITaskModel>>('IBaseBusiness<ITaskModel>').to(TaskBusiness);
 container.bind<IBaseBusiness<IDeviceModel>>('IBaseBusiness<IDeviceModel>').to(DeviceBusiness);
+container.bind<IDeviceBusiness>('IDeviceBusiness').to(DeviceBusiness);
 container.bind<IBaseBusiness<IActionModel>>('IBaseBusiness<IActionModel>').to(ActionBusiness);
 container.bind<IBaseBusiness<IHttpActionModel>>('IBaseBusiness<IHttpActionModel>').to(HttpActionBusiness);
 container.bind<ThermostatBusiness>('ThermostatBusiness').to(ThermostatBusiness);
