@@ -5,6 +5,7 @@ import autobind from 'autobind-decorator';
 import { controller, httpGet, httpPost } from 'inversify-express-utils';
 import IBaseBusiness from '../app/business/interfaces/base/IBaseBusiness';
 import { inject } from 'inversify';
+import { Types } from '../config/Types';
 
 @autobind
 @controller('/api/thermostat')
@@ -13,7 +14,7 @@ export default class ThermostatController extends BaseController<IThermostatMode
     /**
      *
      */
-    constructor(@inject('IBaseBusiness<IThermostatModel>') business: IBaseBusiness<IThermostatModel>) {
+    constructor(@inject(Types.IBaseBusiness_IThermostatModel) business: IBaseBusiness<IThermostatModel>) {
         super(business);
         
     }

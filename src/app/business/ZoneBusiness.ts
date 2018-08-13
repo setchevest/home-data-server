@@ -3,11 +3,12 @@ import IZoneModel from '../model/interfaces/IZoneModel';
 import { sealed } from '../../core/decorators/Sealed';
 import { injectable, inject } from 'inversify';
 import IRepository from '../repository/interfaces/IRepository';
+import { Types } from '../../config/Types';
 
 @sealed
 @injectable()
 export default class ZoneBusiness extends BaseBusiness<IZoneModel> {
-    constructor(@inject('IRepository<IZoneModel>') repository: IRepository<IZoneModel>) {
+    constructor(@inject(Types.IRepository_IZoneModel) repository: IRepository<IZoneModel>) {
         super(repository);
     }
 

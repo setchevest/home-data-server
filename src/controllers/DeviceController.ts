@@ -4,11 +4,12 @@ import { controller, httpGet, request, httpPost } from 'inversify-express-utils'
 import { inject } from 'inversify';
 import IDeviceModel from '../app/model/interfaces/IDeviceModel';
 import IDeviceBusiness from '../app/business/interfaces/IDeviceBusiness';
+import { Types } from '../config/Types';
 
 @controller('/api/device')
 export default class DeviceController extends BaseController<IDeviceModel> {
     constructor(
-        @inject('IDeviceBusiness')business: IDeviceBusiness) {
+        @inject(Types.IDeviceBusiness)business: IDeviceBusiness) {
         super(business);
     }
 

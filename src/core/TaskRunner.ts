@@ -1,4 +1,4 @@
-import { ProcessEvents } from './ProcessEvents';
+import { Events } from '../app/business/Events';
 
 import IProcess from './intefaces/IProcess';
 import ThermostatBusiness from '../app/business/ThermostatBusiness';
@@ -11,6 +11,7 @@ import ITimeTriggerModel from '../app/model/interfaces/ITimeTriggerModel';
 import { injectable, inject } from 'inversify';
 import { IFunctionActionModel } from '../app/model/interfaces/IFunctionActionModel';
 import { IMessageBroker, IMessagePayload } from './intefaces/IMessageBroker';
+import { Types } from '../config/Types';
 
 export enum JobEvents {
     started = 'runned',
@@ -27,21 +28,21 @@ export default class TaskRunner implements IProcess {
     }
 
     constructor(
-        @inject('IMessageBroker') private messageBroker: IMessageBroker,
-        @inject('ThermostatBusiness') private thermostatBusiness: ThermostatBusiness,
-        @inject('IRepository<ITaskModel>') private taskRepo: IRepository<ITaskModel>) {
+        @inject(Types.IMessageBroker) private messageBroker: IMessageBroker,
+        @inject(Types.ThermostatBusiness) private thermostatBusiness: ThermostatBusiness,
+        @inject(Types.IRepository_ITaskModel) private taskRepo: IRepository<ITaskModel>) {
     }
 
     @autobind
     public start(): Promise<boolean> {
-        this.messageBroker.subscribe(ProcessEvents.taskChanged, this.configurationChanged);
+        this.messageBroker.subscribe(Events.Task.Changed, this.configurationChanged);
         return this.load();
     }
 
     @autobind
     public stop(): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            this.messageBroker.unsubscribe(ProcessEvents.taskChanged, this.configurationChanged);
+            this.messageBroker.unsubscribe(Events.Task.Changed, this.configurationChanged);
             this.cancelAllJobs();
             resolve(true);
         });

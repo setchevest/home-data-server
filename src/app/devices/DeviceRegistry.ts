@@ -5,17 +5,19 @@ import IDeviceModel from '../model/interfaces/IDeviceModel';
 import IRegistry from '../../core/intefaces/IRegistry';
 import { IMessageBroker } from '../../core/intefaces/IMessageBroker';
 import IRepository from '../repository/interfaces/IRepository';
+import { Events } from '../business/Events';
+import { Types } from '../../config/Types';
 
 @injectable()
 export default class DeviceRegistry implements IRegistry<String, IDevice> {
 
     private devices: Map<String, IDevice> = new Map<String, IDevice>();
 
-    constructor(@inject('IDeviceFactory') private deviceFactory: IDeviceFactory,
-        @inject('IRepository<IDeviceModel>') private deviceBs: IRepository<IDeviceModel>,
-        @inject('IMessageBroker') private messageBroker: IMessageBroker) {
+    constructor(@inject(Types.IDeviceFactory) private deviceFactory: IDeviceFactory,
+        @inject(Types.IRepository_IDeviceModel) private deviceBs: IRepository<IDeviceModel>,
+        @inject(Types.IMessageBroker) messageBroker: IMessageBroker) {
 
-        messageBroker.subscribe('deviceChanged', v => this.loadDevices());
+        messageBroker.subscribe(Events.Device.Changed, v => this.loadDevices());
         this.loadDevices();
     }
 

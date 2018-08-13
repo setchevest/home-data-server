@@ -22,6 +22,7 @@ import '../controllers/ActionController';
 import '../controllers/DeviceController';
 import { injectable, inject } from 'inversify';
 import { exists } from 'fs';
+import { Types } from '../config/Types';
 
 @injectable()
 export default class WebServer implements IProcess {
@@ -43,7 +44,7 @@ export default class WebServer implements IProcess {
     private port: number | string | boolean;
     /*--------  Constructor  --------*/
 
-    constructor(@inject('IAppConfig') private appConfig: IAppConfig) {
+    constructor(@inject(Types.IAppConfig) private appConfig: IAppConfig) {
         
         // Start App
         this.port = this.normalizePort(this.appConfig.PORT);

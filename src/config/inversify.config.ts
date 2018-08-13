@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { Types } from './Types';
 import { Container } from 'inversify';
 import IBaseBusiness from '../app/business/interfaces/base/IBaseBusiness';
 import IThermostatModel from '../app/model/interfaces/IThermostatModel';
@@ -53,35 +54,36 @@ const container = new Container(
         skipBaseClassChecks: true,
     });
 
-container.bind<IAppConfig>('IAppConfig').to(AppConfig).inSingletonScope();
-container.bind<IDeviceFactory>('IDeviceFactory').to(DeviceFactory).inSingletonScope();
-container.bind<IRegistry<String, IDevice>>('IRegistry<String, IDevice>').to(DeviceRegistry).inSingletonScope();
-container.bind<IThermostatDevice>('IThermostatDevice').to(ArduinoThermostat);
+container.bind<IAppConfig>(Types.IAppConfig).to(AppConfig).inSingletonScope();
+container.bind<IDeviceFactory>(Types.IDeviceFactory).to(DeviceFactory).inSingletonScope();
+container.bind<IRegistry<String, IDevice>>(Types.IRegistry_String_IDevice).to(DeviceRegistry).inSingletonScope();
 
-container.bind<IRepository<ITemperatureSensorDataModel>>('IRepository<ITemperatureSensorDataModel>').to(TemperatureSensorDataRepository).inRequestScope();
-container.bind<IRepository<IZoneModel>>('IRepository<IZoneModel>').to(ZoneRepository).inRequestScope();
-container.bind<IRepository<IThermostatModel>>('IRepository<IThermostatModel>').to(ThermostatRepository).inRequestScope();
-container.bind<IRepository<ITaskModel>>('IRepository<ITaskModel>').to(TaskRepository).inSingletonScope();
-container.bind<IRepository<ITimeTriggerModel>>('IRepository<ITimeTriggerModel>').to(TimeTriggerRepository).inRequestScope();
-container.bind<IRepository<IFunctionActionModel>>('IRepository<IFunctionActionModel>').to(FunctionActionRepository).inRequestScope();
-container.bind<IRepository<IActionModel>>('IRepository<IActionModel>').to(ActionRepository).inRequestScope();
-container.bind<IRepository<IHttpActionModel>>('IRepository<IHttpActionModel>').to(HttpActionRepository).inRequestScope();
-container.bind<IRepository<IDeviceModel>>('IRepository<IDeviceModel>').to(DeviceRepository).inSingletonScope();
-container.bind<IBaseBusiness<ITemperatureSensorDataModel>>('IBaseBusiness<ITemperatureSensorDataModel>').to(TemperatureSensorDataBusiness);
-container.bind<IBaseBusiness<IZoneModel>>('IBaseBusiness<IZoneModel>').to(ZoneBusiness);
-container.bind<IBaseBusiness<IFunctionActionModel>>('IBaseBusiness<IFunctionActionModel>').to(FunctionActionBusiness);
-container.bind<IBaseBusiness<ITimeTriggerModel>>('IBaseBusiness<ITimeTriggerModel>').to(TimeTriggerBusiness);
-container.bind<IBaseBusiness<IThermostatModel>>('IBaseBusiness<IThermostatModel>').to(ThermostatBusiness);
-container.bind<IBaseBusiness<ITaskModel>>('IBaseBusiness<ITaskModel>').to(TaskBusiness);
-container.bind<IBaseBusiness<IDeviceModel>>('IBaseBusiness<IDeviceModel>').to(DeviceBusiness);
-container.bind<IDeviceBusiness>('IDeviceBusiness').to(DeviceBusiness);
-container.bind<IBaseBusiness<IActionModel>>('IBaseBusiness<IActionModel>').to(ActionBusiness);
-container.bind<IBaseBusiness<IHttpActionModel>>('IBaseBusiness<IHttpActionModel>').to(HttpActionBusiness);
-container.bind<ThermostatBusiness>('ThermostatBusiness').to(ThermostatBusiness);
+container.bind<IThermostatDevice>(Types.IThermostatDevice).to(FakeArduinoThermostat);
 
-container.bind<IProcessManager>('IProcessManager').to(ProcessManager).inSingletonScope();
-container.bind<IMessageBroker>('IMessageBroker').to(ProcessManager).inSingletonScope();
-container.bind<IProcess>('IProcess').to(TaskRunner).inSingletonScope();
-container.bind<IProcess>('IProcess').to(WebServer).inSingletonScope();
+container.bind<IRepository<ITemperatureSensorDataModel>>(Types.IRepository_ITemperatureSensorDataModel).to(TemperatureSensorDataRepository).inRequestScope();
+container.bind<IRepository<IZoneModel>>(Types.IRepository_IZoneModel).to(ZoneRepository).inRequestScope();
+container.bind<IRepository<IThermostatModel>>(Types.IRepository_IThermostatModel).to(ThermostatRepository).inRequestScope();
+container.bind<IRepository<ITaskModel>>(Types.IRepository_ITaskModel).to(TaskRepository).inSingletonScope();
+container.bind<IRepository<ITimeTriggerModel>>(Types.IRepository_ITimeTriggerModel).to(TimeTriggerRepository).inRequestScope();
+container.bind<IRepository<IFunctionActionModel>>(Types.IRepository_IFunctionActionModel).to(FunctionActionRepository).inRequestScope();
+container.bind<IRepository<IActionModel>>(Types.IRepository_IActionModel).to(ActionRepository).inRequestScope();
+container.bind<IRepository<IHttpActionModel>>(Types.IRepository_IHttpActionModel).to(HttpActionRepository).inRequestScope();
+container.bind<IRepository<IDeviceModel>>(Types.IRepository_IDeviceModel).to(DeviceRepository).inSingletonScope();
+container.bind<IBaseBusiness<ITemperatureSensorDataModel>>(Types.IBaseBusiness_ITemperatureSensorDataModel).to(TemperatureSensorDataBusiness);
+container.bind<IBaseBusiness<IZoneModel>>(Types.IBaseBusiness_IZoneModel).to(ZoneBusiness);
+container.bind<IBaseBusiness<IFunctionActionModel>>(Types.IBaseBusiness_IFunctionActionModel).to(FunctionActionBusiness);
+container.bind<IBaseBusiness<ITimeTriggerModel>>(Types.IBaseBusiness_ITimeTriggerModel).to(TimeTriggerBusiness);
+container.bind<IBaseBusiness<IThermostatModel>>(Types.IBaseBusiness_IThermostatModel).to(ThermostatBusiness);
+container.bind<IBaseBusiness<ITaskModel>>(Types.IBaseBusiness_ITaskModel).to(TaskBusiness);
+container.bind<IBaseBusiness<IDeviceModel>>(Types.IBaseBusiness_IDeviceModel).to(DeviceBusiness);
+container.bind<IDeviceBusiness>(Types.IDeviceBusiness).to(DeviceBusiness);
+container.bind<IBaseBusiness<IActionModel>>(Types.IBaseBusiness_IActionModel).to(ActionBusiness);
+container.bind<IBaseBusiness<IHttpActionModel>>(Types.IBaseBusiness_IHttpActionModel).to(HttpActionBusiness);
+container.bind<ThermostatBusiness>(Types.ThermostatBusiness).to(ThermostatBusiness);
+
+container.bind<IProcessManager>(Types.IProcessManager).to(ProcessManager).inSingletonScope();
+container.bind<IMessageBroker>(Types.IMessageBroker).to(ProcessManager).inSingletonScope();
+container.bind<IProcess>(Types.IProcess).to(TaskRunner).inSingletonScope();
+container.bind<IProcess>(Types.IProcess).to(WebServer).inSingletonScope();
 
 export default container;

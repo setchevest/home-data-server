@@ -13,15 +13,16 @@ import IZoneModel from '../model/interfaces/IZoneModel';
 import autobind from 'autobind-decorator';
 import IRegistry from '../../core/intefaces/IRegistry';
 import IDevice from '../devices/interfaces/IDevice';
+import { Types } from '../../config/Types';
 
 @sealed
 @injectable()
 export default class ThermostatBusiness extends BaseBusiness<IThermostatModel> implements IThermostatBusiness {
     
-    constructor(@inject('IRepository<IThermostatModel>') repository: IRepository<IThermostatModel>,
-        @inject('IRegistry<String, IDevice>') private deviceRegistry: IRegistry<String, IDevice>,
-        @inject('IBaseBusiness<ITemperatureSensorDataModel>') private tempBusiness: IBaseBusiness<ITemperatureSensorDataModel>,
-        @inject('IBaseBusiness<IZoneModel>') private zoneBusiness: IBaseBusiness<IZoneModel>) {
+    constructor(@inject(Types.IRepository_IThermostatModel) repository: IRepository<IThermostatModel>,
+        @inject(Types.IRegistry_String_IDevice) private deviceRegistry: IRegistry<String, IDevice>,
+        @inject(Types.IBaseBusiness_ITemperatureSensorDataModel) private tempBusiness: IBaseBusiness<ITemperatureSensorDataModel>,
+        @inject(Types.IBaseBusiness_IZoneModel) private zoneBusiness: IBaseBusiness<IZoneModel>) {
         super(repository);
     }
 

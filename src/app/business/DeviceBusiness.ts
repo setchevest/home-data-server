@@ -9,14 +9,16 @@ import IDeviceFactory from '../devices/interfaces/IDeviceFactory';
 import IDevice from '../devices/interfaces/IDevice';
 import IInputDevice, { isInstanceOfInputDevice } from '../devices/interfaces/IInputDevice';
 import IRegistry from '../../core/intefaces/IRegistry';
+import { Events } from './Events';
+import { Types } from '../../config/Types';
 
 @sealed
 @injectable()
 export default class DeviceBusiness extends BaseBusiness<IDeviceModel> implements IDeviceBusiness {
     
     constructor(
-        @inject('IRepository<IDeviceModel>')repository: IRepository<IDeviceModel>,
-        @inject('IRegistry<String, IDevice>')private deviceRegistry: IRegistry<String, IDevice>) {
+        @inject(Types.IRepository_IDeviceModel)repository: IRepository<IDeviceModel>,
+        @inject(Types.IRegistry_String_IDevice)private deviceRegistry: IRegistry<String, IDevice>) {
         super(repository);
     }
 
@@ -30,17 +32,17 @@ export default class DeviceBusiness extends BaseBusiness<IDeviceModel> implement
         }
     }
 
-    @asyncMessage('IMessageBroker', 'deviceChanged')
+    @asyncMessage('IMessageBroker', Events.Device.Changed)
     public async create(item: IDeviceModel): Promise<IDeviceModel> {
         return super.create(item);
     }
 
-    @asyncMessage('IMessageBroker', 'deviceChanged')
+    @asyncMessage('IMessageBroker', Events.Device.Changed)
     public async update(id: string, item: IDeviceModel): Promise<IDeviceModel> {
         return super.update(id, item);
     }
 
-    @asyncMessage('IMessageBroker', 'deviceChanged')
+    @asyncMessage('IMessageBroker', Events.Device.Changed)
     public async delete(id: string): Promise<void> {
         return super.delete(id);
     }
