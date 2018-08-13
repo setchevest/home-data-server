@@ -56,9 +56,9 @@ export default class ArduinoThermostat implements IThermostatDevice {
     }
 
     public setData(data: any): Promise<any> {
-        if (data && data.power) {
+        if (data && data.power !== null) {
             return this.setPower(data.power);
-        } else if (data && data.mode) {
+        } else if (data && data.mode !== null) {
             return this.setMode(data.mode);
         }
         return Promise.resolve();
@@ -73,20 +73,20 @@ export default class ArduinoThermostat implements IThermostatDevice {
     }
 
     public getStatus(): Promise<IThermostatResponse> {
-        return this.axiosromiseWrapper<IThermostatResponse>(axios.get(this.config.url));
+        return this.axiosPromiseWrapper<IThermostatResponse>(axios.get(this.config.url));
     }
 
     public setPower(power: boolean): Promise<IThermostatResponse> {
         const url = this.config.url + (power ? '/on' : '/off');
-        return this.axiosromiseWrapper<IThermostatResponse>(axios.get(url));
+        return this.axiosPromiseWrapper<IThermostatResponse>(axios.get(url));
     }
 
     public setMode(mode: ThermostatMode): Promise<IThermostatResponse> {
         const url = mode === ThermostatMode.Manual ? '/manual' : '/auto';
-        return this.axiosromiseWrapper<IThermostatResponse>(axios.get(this.config.url + url));
+        return this.axiosPromiseWrapper<IThermostatResponse>(axios.get(this.config.url + url));
     }
 
-    axiosromiseWrapper<T>(axiosPromise: AxiosPromise): Promise<T> {
+    axiosPromiseWrapper<T>(axiosPromise: AxiosPromise): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             axiosPromise
                 .then(response => {

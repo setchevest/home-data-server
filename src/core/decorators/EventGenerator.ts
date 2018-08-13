@@ -13,7 +13,7 @@ export function message(broker: string | symbol, eventName: string | symbol, dat
                     payload: data || result,
                 });    
             } catch (error) {
-                logger.warning(`Message not sent: "${String(eventName)}". Error`, error);
+                logger.warning(`Message not sent: "${String(eventName)}". Error`, error.message || error);
             }
             return result;
         };
@@ -31,7 +31,7 @@ export function asyncMessage(broker: string | symbol, eventName: string | symbol
                         payload: data || result,
                     });    
                 } catch (error) {
-                    logger.warning(`Message not sent: "${String(eventName)}". Error`, error);
+                    logger.warning(`Message not sent: "${String(eventName)}". Error`, error.message || error);
                 }
                 return result;
             });

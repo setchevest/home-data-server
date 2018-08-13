@@ -15,7 +15,7 @@ export default class DeviceRegistry implements IRegistry<String, IDevice> {
         @inject('IRepository<IDeviceModel>') private deviceBs: IRepository<IDeviceModel>,
         @inject('IMessageBroker') private messageBroker: IMessageBroker) {
 
-        messageBroker.subscribe('deviceChanged', this.loadDevices);
+        messageBroker.subscribe('deviceChanged', v => this.loadDevices());
         this.loadDevices();
     }
 
