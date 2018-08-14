@@ -10,7 +10,7 @@ import logger from './Logger';
 import * as winston from 'winston';
 import * as expressWinston from 'express-winston';
 import { InversifyExpressServer } from 'inversify-express-utils';
-import container from '../config/inversify.config';
+import container from '../config/Inversify.config';
 import '../controllers/TemperatureSensorDataController';
 import '../controllers/ZoneController';
 import '../controllers/ThermostatController';

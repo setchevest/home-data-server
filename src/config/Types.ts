@@ -4,6 +4,7 @@ export class Types {
     static readonly 'IDeviceFactory' = 'IDeviceFactory';
     static readonly 'IRegistry_String_IDevice' = 'IRegistry<String, IDevice>';
     static readonly 'IThermostatDevice' = 'IThermostatDevice';
+    static readonly 'IBaseDeviceConstructor' = 'IBaseDeviceConstructor';
     static readonly 'IRepository_ITemperatureSensorDataModel' = 'IRepository<ITemperatureSensorDataModel>';
     static readonly 'IRepository_IZoneModel' = 'IRepository<IZoneModel>';
     static readonly 'IRepository_IThermostatModel' = 'IRepository<IThermostatModel>';

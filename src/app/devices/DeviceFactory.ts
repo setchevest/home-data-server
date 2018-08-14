@@ -1,14 +1,21 @@
 import IDeviceFactory from './interfaces/IDeviceFactory';
 import IDeviceModel from '../model/interfaces/IDeviceModel';
 import IDevice from './interfaces/IDevice';
-import ArduinoThermostat from './ArduinoThermostat';
-import { injectable } from 'inversify';
+import { injectable, inject } from 'inversify';
 import autobind from 'autobind-decorator';
-import container from '../../config/inversify.config';
+import IBaseDeviceConstructor from './interfaces/IBaseDeviceConstructor';
+import { Types } from '../../config/Types';
 
 @injectable()
 @autobind
 export default class DeviceFactory implements IDeviceFactory {
+
+    /**
+     *
+     */
+    constructor(@inject(Types.IBaseDeviceConstructor) private ThermostatConstructor: IBaseDeviceConstructor) {
+        
+    }
     
     public createAsync(model: IDeviceModel): Promise<IDevice> {
         return new Promise<IDevice>((resolve, reject) => {
@@ -28,9 +35,9 @@ export default class DeviceFactory implements IDeviceFactory {
     private createDevice(model: IDeviceModel): IDevice {
         let device: IDevice = null;
         if (model.type === 'Thermostat') {
-            device = container.get<IDevice>('IThermostatDevice');
-        } 
-
+            device = new this.ThermostatConstructor(model.name);
+        }
+        
         if (device)
             device.setConfig(model.config);
         return device;

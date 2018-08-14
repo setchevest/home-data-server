@@ -5,3 +5,4 @@ export default interface IDeviceFactory {
     createAsync(mode: IDeviceModel): Promise<IDevice>;
     create(mode: IDeviceModel): IDevice;
 }
+

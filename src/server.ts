@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { cleanUpMetadata } from 'inversify-express-utils';
 cleanUpMetadata();
-import container from './config/inversify.config';
+import container from './config/Inversify.config';
 import IProcess from './core/intefaces/IProcess';
 import DataInitializer from './config/data/DataInitializer';
 import { IProcessManager } from './core/intefaces/IProcessManager';

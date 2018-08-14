@@ -10,13 +10,18 @@ export class AppConfig implements IAppConfig {
     public readonly PORT: number;
     public readonly LOG_LEVEL: string;
     public readonly UPDATE_INTERVAL: number;
+    public readonly THERMOSTAT: string;
+    public readonly IFTTT_KEY: string;
+    
 
     constructor() {
         this.setEnv();
         this.MONGO_URI = process.env.MONGO_URI;
         this.PORT = process.env.PORT ? Number.parseInt(process.env.PORT) : 8080;
-        this.LOG_LEVEL = 'debug';
+        this.LOG_LEVEL = process.env.LOG_LEVEL;
         this.UPDATE_INTERVAL = 60;
+        this.THERMOSTAT = process.env.THERMOSTAT;
+        this.IFTTT_KEY = process.env.IFTTT_KEY;
     }
 
     /**

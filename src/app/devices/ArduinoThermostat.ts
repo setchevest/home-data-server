@@ -5,6 +5,7 @@ import { ThermostatMode } from '../model/interfaces/IThermostatModel';
 import logger from '../../core/Logger';
 import { injectable } from 'inversify';
 import autobind from 'autobind-decorator';
+import BaseDevice from './base/BaseDevice';
 
 // axios.interceptors.request.use(request => {
 //     console.log('Starting Request', request)
@@ -19,7 +20,7 @@ import autobind from 'autobind-decorator';
 
 @injectable()
 @autobind
-export default class ArduinoThermostat implements IThermostatDevice {
+export default class ArduinoThermostat extends BaseDevice implements IThermostatDevice {
 
     private config: {
         url: string,
@@ -28,19 +29,15 @@ export default class ArduinoThermostat implements IThermostatDevice {
     /**
      *
      */
-    constructor() {
-
+    constructor(name: string) {
+        super(name);
     }
 
     public discriminator: 'InputDevice';
 
-    get name(): string {
-        return 'Thermostat';
-    }
-
     // {"fm":224,"lu":55,"mode":"Manual","heater":{"status":"OFF"},"zones":[{"id":2,"temp":27,"hum":41}]}
 
-    public getCurrentConfiguration(): Promise<IThermostatConfig> {
+    public getConfig(): Promise<IThermostatConfig> {
         return Promise.resolve(this.config.data);
     }
 
@@ -53,23 +50,6 @@ export default class ArduinoThermostat implements IThermostatDevice {
             return Promise.reject('Missing configuration: Key "url"');
 
         return Promise.resolve(true);
-    }
-
-    public setData(data: any): Promise<any> {
-        if (data && data.power !== null) {
-            return this.setPower(data.power);
-        } else if (data && data.mode !== null) {
-            return this.setMode(data.mode);
-        }
-        return Promise.resolve();
-    }
-
-    
-    public getData(data: any): Promise<any> {
-        if (data && data.config) {
-            return this.getCurrentConfiguration();
-        }
-        return this.getStatus();
     }
 
     public getStatus(): Promise<IThermostatResponse> {
@@ -86,7 +66,7 @@ export default class ArduinoThermostat implements IThermostatDevice {
         return this.axiosPromiseWrapper<IThermostatResponse>(axios.get(this.config.url + url));
     }
 
-    axiosPromiseWrapper<T>(axiosPromise: AxiosPromise): Promise<T> {
+    private axiosPromiseWrapper<T>(axiosPromise: AxiosPromise): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             axiosPromise
                 .then(response => {

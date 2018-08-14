@@ -14,12 +14,14 @@ import autobind from 'autobind-decorator';
 import IRegistry from '../../core/intefaces/IRegistry';
 import IDevice from '../devices/interfaces/IDevice';
 import { Types } from '../../config/Types';
+import IAppConfig from '../../config/IAppConfig';
 
 @sealed
 @injectable()
 export default class ThermostatBusiness extends BaseBusiness<IThermostatModel> implements IThermostatBusiness {
     
     constructor(@inject(Types.IRepository_IThermostatModel) repository: IRepository<IThermostatModel>,
+        @inject(Types.IAppConfig) private appConfig: IAppConfig,
         @inject(Types.IRegistry_String_IDevice) private deviceRegistry: IRegistry<String, IDevice>,
         @inject(Types.IBaseBusiness_ITemperatureSensorDataModel) private tempBusiness: IBaseBusiness<ITemperatureSensorDataModel>,
         @inject(Types.IBaseBusiness_IZoneModel) private zoneBusiness: IBaseBusiness<IZoneModel>) {
@@ -28,15 +30,15 @@ export default class ThermostatBusiness extends BaseBusiness<IThermostatModel> i
 
     private device(): IThermostatDevice {
         // TODO: Remove harcoded name. Is fucking awful.
-        const thermostat = <IThermostatDevice>this.deviceRegistry.get('Thermostat');
+        const thermostat = <IThermostatDevice>this.deviceRegistry.get(this.appConfig.THERMOSTAT);
         if (!thermostat)
-            throw new Error('No Thermostat device defined');
+            throw new Error('No Thermostat device configured');
             
         return thermostat;
     }
 
     public async getConfiguration(callback?: (error: any, result: any) => void): Promise<any> {
-        return this.device().getCurrentConfiguration()
+        return this.device().getConfig()
             .then(item => callback(null, item))
             .catch(item => callback(item, null));
     }

@@ -1,5 +1,5 @@
 import logger from '../Logger';
-import container from '../../config/inversify.config';
+import container from '../../config/Inversify.config';
 import { IMessageBroker, IMessagePayload } from '../intefaces/IMessageBroker';
 
 export function message(broker: string | symbol, eventName: string | symbol, data?: any) {

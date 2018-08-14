@@ -9,9 +9,9 @@ import { Events } from '../business/Events';
 import { Types } from '../../config/Types';
 
 @injectable()
-export default class DeviceRegistry implements IRegistry<String, IDevice> {
+export default class DeviceRegistry implements IRegistry<string, IDevice> {
 
-    private devices: Map<String, IDevice> = new Map<String, IDevice>();
+    private devices: Map<string, IDevice> = new Map<string, IDevice>();
 
     constructor(@inject(Types.IDeviceFactory) private deviceFactory: IDeviceFactory,
         @inject(Types.IRepository_IDeviceModel) private deviceBs: IRepository<IDeviceModel>,
@@ -28,16 +28,16 @@ export default class DeviceRegistry implements IRegistry<String, IDevice> {
         this.devices.clear();
         this.deviceBs.retrieve({ condition: { enabled: true } }).then(devs => {
             devs.map(this.deviceFactory.create).forEach(d => {
-                this.devices.set(d.name, d);
+                this.devices.set(d.name(), d);
             });
         });
     }
 
-    public register(key: String, value: IDevice) {
+    public register(key: string, value: IDevice) {
         this.devices.set(key, value);
     }
 
-    public get(key: String): IDevice {
+    public get(key: string): IDevice {
         return this.devices.get(key);
     }
 }

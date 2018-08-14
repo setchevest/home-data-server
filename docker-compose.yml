@@ -14,6 +14,7 @@ services:
       - MONGO_URI=mongodb://mongo:27017/home
       - PORT=8080
       - TZ=America/Argentina/Buenos_Aires
+      - THERMOSTAT=Home Thermostat
   db:
     container_name: mongo
     image: mongo:latest
