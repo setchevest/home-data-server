@@ -5,6 +5,7 @@ import container from './config/Inversify.config';
 import IProcess from './core/intefaces/IProcess';
 import DataInitializer from './config/data/DataInitializer';
 import { IProcessManager } from './core/intefaces/IProcessManager';
+import { Events } from './app/business/Events';
 
 // cluster.on("fork", worker => {
 //     logger.debug("Worker Id: ", worker.id);
@@ -12,6 +13,7 @@ import { IProcessManager } from './core/intefaces/IProcessManager';
 //         logger.debug("Worker online Id: ", worker.id);
 //     })
 // });
+
 const initializer: DataInitializer = new DataInitializer();
 initializer.initializeData();
 

@@ -35,14 +35,14 @@ export default class TaskRunner implements IProcess {
 
     @autobind
     public start(): Promise<boolean> {
-        this.messageBroker.subscribe(Events.Task.Changed, this.configurationChanged);
+        this.messageBroker.subscribe(Events.Task.Changed).on(Events.Task.Changed, this.configurationChanged);
         return this.load();
     }
 
     @autobind
     public stop(): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            this.messageBroker.unsubscribe(Events.Task.Changed, this.configurationChanged);
+            this.messageBroker.unsubscribe(Events.Task.Changed);
             this.cancelAllJobs();
             resolve(true);
         });
@@ -70,7 +70,7 @@ export default class TaskRunner implements IProcess {
 
 
     @autobind
-    private configurationChanged(payload: IMessagePayload): void {
+    private configurationChanged(topics: string[],  payload: IMessagePayload): void {
         this.cancelAllJobs();
         this.load();
     }

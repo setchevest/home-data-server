@@ -1,5 +1,6 @@
 import BaseDevice from '../base/BaseDevice';
+import IDevice from './IDevice';
 
 export default interface IBaseDeviceConstructor {
-    new(name: string): BaseDevice;
+    new(): BaseDevice;
 }

@@ -7,7 +7,7 @@ import IQueryOptions from '../interfaces/base/IQueryOptions';
 
 @injectable()
 export default class InMemoryRepository<T extends IModel> implements IRepository<T> {
-
+    
     private rawData: T[];
 
     /**
@@ -67,6 +67,10 @@ export default class InMemoryRepository<T extends IModel> implements IRepository
                 resolve(updateItem);
             }
         });
+    }
+
+    public async findOneAndUpdate(condition: any, item: T): Promise<T> {
+        throw new Error('Method not implemented.');
     }
 
     public async delete(id: string): Promise<void> {

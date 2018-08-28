@@ -1,20 +1,31 @@
 import IDevice from '../interfaces/IDevice';
 import IInputDevice from '../interfaces/IInputDevice';
+import IBaseDeviceConstructor from '../interfaces/IBaseDeviceConstructor';
 
 export default abstract class BaseDevice implements IDevice, IInputDevice {
-
-    public discriminator: 'InputDevice';
-
-    constructor(protected deviceName: string) {
-
+    
+    protected deviceName: string = '';
+    /**
+     *
+     */
+    constructor() {
+        
     }
 
-    public name(): string {
+    public get name(): string {
         return this.deviceName;
     }
 
+    public set name(newValue: string) {
+        this.deviceName = newValue;
+    }
+
     public setConfig(config: Map<string, any>): Promise<boolean> {
-        return Promise.resolve(false);
+        if (!config['name'] && !this.name) {
+            throw new Error('No name defined for this device.');
+        }
+        this.name = config['name'];
+        return Promise.resolve(true);
     }
 
     public getData(query: Object): Promise<any> {

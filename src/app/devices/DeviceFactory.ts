@@ -3,8 +3,9 @@ import IDeviceModel from '../model/interfaces/IDeviceModel';
 import IDevice from './interfaces/IDevice';
 import { injectable, inject } from 'inversify';
 import autobind from 'autobind-decorator';
-import IBaseDeviceConstructor from './interfaces/IBaseDeviceConstructor';
 import { Types } from '../../config/Types';
+import IBaseDeviceConstructor from './interfaces/IBaseDeviceConstructor';
+import { isThermostatDeviceModel } from '../model/interfaces/IThermostatDeviceModel';
 
 @injectable()
 @autobind
@@ -13,7 +14,8 @@ export default class DeviceFactory implements IDeviceFactory {
     /**
      *
      */
-    constructor(@inject(Types.IBaseDeviceConstructor) private ThermostatConstructor: IBaseDeviceConstructor) {
+    constructor(@inject(Types.IBaseDeviceConstructor) private ThermostatConstructor: IBaseDeviceConstructor,
+                @inject(Types.IGenericDeviceConstructor) private GenericConstructor: IBaseDeviceConstructor) {
         
     }
     
@@ -34,10 +36,14 @@ export default class DeviceFactory implements IDeviceFactory {
 
     private createDevice(model: IDeviceModel): IDevice {
         let device: IDevice = null;
-        if (model.type === 'Thermostat') {
-            device = new this.ThermostatConstructor(model.name);
+        if (isThermostatDeviceModel(model)) {
+            device = new this.ThermostatConstructor();
+        } else {
+            device = new this.GenericConstructor();
         }
-        
+        if (!model.config.name) {
+            model.config.name = model.name;
+        }
         if (device)
             device.setConfig(model.config);
         return device;

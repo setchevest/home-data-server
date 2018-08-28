@@ -5,11 +5,14 @@ import { inject } from 'inversify';
 import IDeviceModel from '../app/model/interfaces/IDeviceModel';
 import IDeviceBusiness from '../app/business/interfaces/IDeviceBusiness';
 import { Types } from '../config/Types';
+import { IMessageBroker } from '../core/intefaces/IMessageBroker';
+import { Events } from '../app/business/Events';
 
 @controller('/api/device')
 export default class DeviceController extends BaseController<IDeviceModel> {
     constructor(
-        @inject(Types.IDeviceBusiness)business: IDeviceBusiness) {
+        @inject(Types.IDeviceBusiness)business: IDeviceBusiness,
+        @inject(Types.IMessageBroker) private broker: IMessageBroker) {
         super(business);
     }
 

@@ -6,6 +6,7 @@ import logger from '../../core/Logger';
 import { injectable } from 'inversify';
 import autobind from 'autobind-decorator';
 import BaseDevice from './base/BaseDevice';
+import IBaseDeviceConstructor from './interfaces/IBaseDeviceConstructor';
 
 // axios.interceptors.request.use(request => {
 //     console.log('Starting Request', request)
@@ -26,15 +27,7 @@ export default class ArduinoThermostat extends BaseDevice implements IThermostat
         url: string,
         data: IThermostatConfig,
     };
-    /**
-     *
-     */
-    constructor(name: string) {
-        super(name);
-    }
-
-    public discriminator: 'InputDevice';
-
+    
     // {"fm":224,"lu":55,"mode":"Manual","heater":{"status":"OFF"},"zones":[{"id":2,"temp":27,"hum":41}]}
 
     public getConfig(): Promise<IThermostatConfig> {
@@ -42,6 +35,7 @@ export default class ArduinoThermostat extends BaseDevice implements IThermostat
     }
 
     public setConfig(config: Map<string, any>): Promise<boolean> {
+        super.setConfig(config);
         this.config = {
             url: config.get('url'),
             data: config.get('data'),

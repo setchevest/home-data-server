@@ -5,6 +5,7 @@ export class Types {
     static readonly 'IRegistry_String_IDevice' = 'IRegistry<String, IDevice>';
     static readonly 'IThermostatDevice' = 'IThermostatDevice';
     static readonly 'IBaseDeviceConstructor' = 'IBaseDeviceConstructor';
+    static readonly 'IGenericDeviceConstructor' = 'IGenericDeviceConstructor';
     static readonly 'IRepository_ITemperatureSensorDataModel' = 'IRepository<ITemperatureSensorDataModel>';
     static readonly 'IRepository_IZoneModel' = 'IRepository<IZoneModel>';
     static readonly 'IRepository_IThermostatModel' = 'IRepository<IThermostatModel>';
@@ -14,6 +15,7 @@ export class Types {
     static readonly 'IRepository_IActionModel' = 'IRepository<IActionModel>';
     static readonly 'IRepository_IHttpActionModel' = 'IRepository<IHttpActionModel>';
     static readonly 'IRepository_IDeviceModel' = 'IRepository<IDeviceModel>';
+    static readonly 'IRepository_IGenericDeviceModel' = 'IRepository<IGenericDeviceModel>';
     static readonly 'IBaseBusiness_ITemperatureSensorDataModel' = 'IBaseBusiness<ITemperatureSensorDataModel>';
     static readonly 'IBaseBusiness_IZoneModel' = 'IBaseBusiness<IZoneModel>';
     static readonly 'IBaseBusiness_IFunctionActionModel' = 'IBaseBusiness<IFunctionActionModel>';
@@ -29,4 +31,5 @@ export class Types {
     static readonly 'IProcessManager' = 'IProcessManager';
     static readonly 'IMessageBroker' = 'IMessageBroker';
     static readonly 'IProcess' = 'IProcess';
+    static readonly 'ILogger' = 'Ilogger';
 }

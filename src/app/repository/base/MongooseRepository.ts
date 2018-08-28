@@ -43,7 +43,8 @@ export default class MongooseRepository<T extends IModel> implements IRepository
     }
 
     public async update(id: string, item: T): Promise<T> {
-        return this._model.update({ _id: id }, item).exec();
+        
+        return this._model.findByIdAndUpdate(id, item).exec();
     }
 
     public async delete(id: string): Promise<void> {
@@ -56,6 +57,10 @@ export default class MongooseRepository<T extends IModel> implements IRepository
 
     public async findOne(condition: any): Promise<T> {
         return this._model.findOne(condition).exec();
+    }
+
+    public async findOneAndUpdate(condition: any, item: T): Promise<T> {
+        return this._model.findOneAndUpdate(condition, item).exec();
     }
 
     protected toObjectId(id: string): mongoose.Types.ObjectId {

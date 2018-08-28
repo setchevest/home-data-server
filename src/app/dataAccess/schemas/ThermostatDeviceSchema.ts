@@ -12,5 +12,5 @@ export class ThermostatDeviceSchema extends Schema {
     }
 }
 
-const model: Model<IDeviceMongooseModel> = Device.discriminator<IDeviceMongooseModel>('Thermostat', new DeviceSchema());
+const model: Model<IDeviceMongooseModel> = Device.discriminator<IDeviceMongooseModel>('Thermostat', new ThermostatDeviceSchema());
 export default model;

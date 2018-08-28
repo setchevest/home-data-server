@@ -1,6 +1,7 @@
 export default interface IDevice extends Object {
-    name(): string;
+    name: string;
     setConfig(config: Map<string, any>): Promise<boolean>;
     getData(query: Object): Promise<any>;
+    readonly [index: string]: any;
 }
 

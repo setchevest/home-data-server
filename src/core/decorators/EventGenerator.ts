@@ -2,7 +2,7 @@ import logger from '../Logger';
 import container from '../../config/Inversify.config';
 import { IMessageBroker, IMessagePayload } from '../intefaces/IMessageBroker';
 
-export function message(broker: string | symbol, eventName: string | symbol, data?: any) {
+export function message(broker: string, eventName: string , data?: any) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const method = descriptor.value;
         descriptor.value = function () {
@@ -20,7 +20,7 @@ export function message(broker: string | symbol, eventName: string | symbol, dat
     };
 }
 
-export function asyncMessage(broker: string | symbol, eventName: string | symbol, data?: any) {
+export function asyncMessage(broker: string , eventName: string , data?: any) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const method = descriptor.value;
         descriptor.value = function () {

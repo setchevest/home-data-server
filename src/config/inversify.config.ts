@@ -39,6 +39,7 @@ import HttpActionBusiness from '../app/business/HttpActionBusiness';
 import HttpActionRepository from '../app/repository/HttpActionRepository';
 import IDeviceModel from '../app/model/interfaces/IDeviceModel';
 import DeviceRepository from '../app/repository/DeviceRepository';
+
 import DeviceBusiness from '../app/business/DeviceBusiness';
 import IDeviceFactory from '../app/devices/interfaces/IDeviceFactory';
 import DeviceFactory from '../app/devices/DeviceFactory';
@@ -46,9 +47,15 @@ import IDeviceBusiness from '../app/business/interfaces/IDeviceBusiness';
 import DeviceRegistry from '../app/devices/DeviceRegistry';
 import IRegistry from '../core/intefaces/IRegistry';
 import IDevice from '../app/devices/interfaces/IDevice';
-import FakeArduinoThermostat from '../app/devices/FakeArduinoThermostat';
+import FakeArduinoThermostat from '../test/app/devices/FakeArduinoThermostat';
 import BaseDevice from '../app/devices/base/BaseDevice';
 import GenericDevice from '../app/devices/GenericDevice';
+import GenericDeviceRepository from '../app/repository/GenericDevicerepository';
+import { ILogger } from '../core/intefaces/ILogger';
+import logger from '../core/Logger';
+import { MqttMessageBroker } from '../core/MqttMessageBroker';
+import VirtualDeviceLauncher from '../test/VirtualDeviceLauncher';
+import { IGenericDeviceModel } from '../app/model/interfaces/IGenericDeviceModel';
 
 const container = new Container(
     {
@@ -57,10 +64,11 @@ const container = new Container(
     });
 
 container.bind<IAppConfig>(Types.IAppConfig).to(AppConfig).inSingletonScope();
+container.bind<ILogger>(Types.ILogger).toConstantValue(logger);
 container.bind<IDeviceFactory>(Types.IDeviceFactory).to(DeviceFactory).inSingletonScope();
 container.bind<IRegistry<String, IDevice>>(Types.IRegistry_String_IDevice).to(DeviceRegistry).inSingletonScope();
-
-container.bind<IThermostatDevice>(Types.IBaseDeviceConstructor).toConstructor(ArduinoThermostat);
+container.bind<IThermostatDevice>(Types.IBaseDeviceConstructor).toConstructor(FakeArduinoThermostat);
+container.bind<IThermostatDevice>(Types.IGenericDeviceConstructor).toConstructor(GenericDevice);
 // container.bind<BaseDevice>(Types.IBaseDeviceConstructor).toConstructor(GenericDevice);
 
 container.bind<IRepository<ITemperatureSensorDataModel>>(Types.IRepository_ITemperatureSensorDataModel).to(TemperatureSensorDataRepository).inRequestScope();
@@ -72,6 +80,8 @@ container.bind<IRepository<IFunctionActionModel>>(Types.IRepository_IFunctionAct
 container.bind<IRepository<IActionModel>>(Types.IRepository_IActionModel).to(ActionRepository).inRequestScope();
 container.bind<IRepository<IHttpActionModel>>(Types.IRepository_IHttpActionModel).to(HttpActionRepository).inRequestScope();
 container.bind<IRepository<IDeviceModel>>(Types.IRepository_IDeviceModel).to(DeviceRepository).inSingletonScope();
+container.bind<IRepository<IGenericDeviceModel>>(Types.IRepository_IGenericDeviceModel).to(GenericDeviceRepository).inSingletonScope();
+
 container.bind<IBaseBusiness<ITemperatureSensorDataModel>>(Types.IBaseBusiness_ITemperatureSensorDataModel).to(TemperatureSensorDataBusiness);
 container.bind<IBaseBusiness<IZoneModel>>(Types.IBaseBusiness_IZoneModel).to(ZoneBusiness);
 container.bind<IBaseBusiness<IFunctionActionModel>>(Types.IBaseBusiness_IFunctionActionModel).to(FunctionActionBusiness);
@@ -85,8 +95,10 @@ container.bind<IBaseBusiness<IHttpActionModel>>(Types.IBaseBusiness_IHttpActionM
 container.bind<ThermostatBusiness>(Types.ThermostatBusiness).to(ThermostatBusiness);
 
 container.bind<IProcessManager>(Types.IProcessManager).to(ProcessManager).inSingletonScope();
-container.bind<IMessageBroker>(Types.IMessageBroker).to(ProcessManager).inSingletonScope();
+container.bind<IMessageBroker>(Types.IMessageBroker).to(MqttMessageBroker);
 container.bind<IProcess>(Types.IProcess).to(TaskRunner).inSingletonScope();
 container.bind<IProcess>(Types.IProcess).to(WebServer).inSingletonScope();
+container.bind<IProcess>(Types.IProcess).to(VirtualDeviceLauncher).inSingletonScope();
+
 
 export default container;

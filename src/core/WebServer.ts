@@ -20,6 +20,7 @@ import '../controllers/FunctionActionController';
 import '../controllers/HttpActionController';
 import '../controllers/ActionController';
 import '../controllers/DeviceController';
+import '../test/controllers/TestController';
 import { injectable, inject } from 'inversify';
 import { exists } from 'fs';
 import { Types } from '../config/Types';

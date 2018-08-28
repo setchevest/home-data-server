@@ -1,9 +1,9 @@
-import { IThermostatConfig, IThermostatResponse } from '../model/interfaces/IThermostatConfig';
-import IThermostatDevice from './interfaces/IThermostatDevice';
-import { ThermostatMode } from '../model/interfaces/IThermostatModel';
-import { injectable } from 'inversify';
+import { IThermostatConfig, IThermostatResponse } from '../../../app/model/interfaces/IThermostatConfig';
+import IThermostatDevice from '../../../app/devices/interfaces/IThermostatDevice';
+import { ThermostatMode } from '../../../app/model/interfaces/IThermostatModel';
+import { injectable, inject } from 'inversify';
 import autobind from 'autobind-decorator';
-import BaseDevice from './base/BaseDevice';
+import BaseDevice from '../../../app/devices/base/BaseDevice';
 
 
 @injectable()
@@ -11,7 +11,7 @@ import BaseDevice from './base/BaseDevice';
 export default class FakeArduinoThermostat extends BaseDevice implements IThermostatDevice {
 
     private config: {
-        url: string,
+        topic: string,
         data: IThermostatConfig,
     };
 
@@ -32,15 +32,6 @@ export default class FakeArduinoThermostat extends BaseDevice implements IThermo
                 hum: 41,
             }],
     };
-    /**
-     *
-     */
-    constructor(name: string) {
-        super(name);
-    }
-
-    public discriminator: 'InputDevice';
-
 
     // {"fm":224,"lu":55,"mode":"Manual","heater":{"status":"OFF"},"zones":[{"id":2,"temp":27,"hum":41}]}
 
@@ -49,11 +40,12 @@ export default class FakeArduinoThermostat extends BaseDevice implements IThermo
     }
 
     public setConfig(config: Map<string, any>): Promise<boolean> {
+        super.setConfig(config);
         this.config = {
-            url: config.get('url'),
+            topic: config.get('url'),
             data: config.get('data'),
         };
-        if (!this.config.url)
+        if (!this.config.topic)
             return Promise.reject('Missing configuration: Key "url"');
 
         return Promise.resolve(true);
@@ -72,3 +64,5 @@ export default class FakeArduinoThermostat extends BaseDevice implements IThermo
         return Promise.resolve(this.data);
     }
 }
+
+
